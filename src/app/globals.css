@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
+  /* Unified Navy + Light Beige (#EFE4CC) Design System */
+  --bg: #0A1120;
+  --card: #111C2E;
+  --surface: #16233A;
+  --border: #22304A;
+  --text: #F3F5F9;
+  --text-secondary: #8C97AD;
+  --accent: #EFE4CC;
+  --accent-hover: #F7F0DF;
+  --on-accent: #0A1120;
+  --tier-gold: #F2C14E;
+  --tier-silver: #B9C2D0;
+  --tier-bronze: #C98A5A;
+  --success: #4FD1A1;
+  --info: #7DA7E8;
+  --pending: #A9B4CC;
+  --urgent: #F0736A;
+
+  /* Compatibility aliases */
+  --app-background: var(--bg);
+  --card-surface: var(--card);
+  --elevated-surface: var(--surface);
+  --border-divider: var(--border);
+  --border-subtle: var(--border);
+  --primary-accent: var(--accent);
+  --primary-accent-hover: var(--accent-hover);
+  --primary-text: var(--text);
+  --secondary-text: var(--text-secondary);
+  --primary-button: var(--accent);
+  --accent-button: var(--accent);
+  --secondary-button: var(--accent-hover);
+  --bg-base: var(--bg);
+  --surface-dark: var(--card);
+  --surface-dark-2: var(--surface);
+  --surface-dark-3: var(--border);
+  --accent-lime: var(--accent);
+  --accent-lime-hover: var(--accent-hover);
+  --status-success: var(--card);
+  --status-warning: var(--card);
+  --status-failure: #2A1418;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Global Cards */
+.card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+}
+
+/* Glass effect */
+.glass-dark {
+  background: rgba(19, 19, 26, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-light {
+  background: rgba(26, 26, 36, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Subtle animation classes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Pill utility */
+.pill-btn {
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+}
+
+.pill-btn:active {
+  transform: scale(0.98);
+}
+
+/* Print Media Styles: Restrict print preview / PDF strictly to the individual receipt card */
+@media print {
+  @page {
+    size: auto;
+    margin: 10mm;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #111111 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Exclude background headers, navigation, main tabs, and any print:hidden elements */
+  header,
+  nav,
+  main,
+  .print\:hidden {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Isolate printable receipt container */
+  #printable-receipt-modal {
+    position: static !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  #printable-receipt-card {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  #printable-receipt-card * {
+    color: #111111 !important;
+  }
+
+  #printable-receipt-card .text-emerald-700,
+  #printable-receipt-card .text-emerald-600 {
+    color: #047857 !important;
+  }
+}
