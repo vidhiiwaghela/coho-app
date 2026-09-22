@@ -268,11 +268,27 @@ export const MeetingsView: React.FC<MeetingsViewProps> = ({
                   <div className="w-10 h-10 rounded-2xl bg-[#1C2740] text-[#F5F1E8] border border-[#2B3854] flex items-center justify-center shrink-0">
                     <Users className="w-5 h-5 text-[#F5F1E8]" />
                   </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-[#F5F1E8] leading-snug">
-                      {meeting.title}
-                    </h3>
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#A6ACC0] mt-1">
+                  <h3 className="text-sm font-bold text-[#F5F1E8] leading-snug">
+                    {meeting.title}
+                  </h3>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  {isExpanded ? (
+                    <ChevronUp className="w-4 h-4 text-[#A6ACC0]" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-[#A6ACC0]" />
+                  )}
+                </div>
+              </div>
+
+              {/* Expanded Details */}
+              {isExpanded && (
+                <div className="p-5 border-t border-[#2B3854] space-y-4 animate-fade-in">
+
+                  {/* 0. Meeting meta: date, venue, attendance, AI status — revealed on expand */}
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#A6ACC0]">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" /> {meeting.meeting_date || meeting.date}
                       </span>
@@ -285,39 +301,25 @@ export const MeetingsView: React.FC<MeetingsViewProps> = ({
                         {meeting.attendeeCount || 50}+ Members Present
                       </span>
                     </div>
+
+                    {status === "pending" ? (
+                      <span className="text-[11px] font-bold text-[#F5F1E8] bg-[#161F30] border border-[#E8B565]/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
+                        <Loader2 className="w-3 h-3 animate-spin text-[#F5F1E8]" />
+                        Summarizing...
+                      </span>
+                    ) : status === "failed" ? (
+                      <span className="text-[11px] font-bold text-[#E2685B] bg-[#2A1418] border border-[#E2685B]/30 px-2.5 py-1 rounded-full flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3" />
+                        AI Failed
+                      </span>
+                    ) : (
+                      <span className="text-[11px] font-bold text-[#F5F1E8] bg-[#161F30] border border-[#E8B565]/40 px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
+                        <Sparkles className="w-3 h-3" />
+                        AI Summary
+                      </span>
+                    )}
                   </div>
-                </div>
 
-                <div className="flex items-center gap-2 shrink-0">
-                  {status === "pending" ? (
-                    <span className="text-[11px] font-bold text-[#F5F1E8] bg-[#161F30] border border-[#E8B565]/40 px-2.5 py-1 rounded-full flex items-center gap-1 animate-pulse">
-                      <Loader2 className="w-3 h-3 animate-spin text-[#F5F1E8]" />
-                      Summarizing...
-                    </span>
-                  ) : status === "failed" ? (
-                    <span className="text-[11px] font-bold text-[#E2685B] bg-[#2A1418] border border-[#E2685B]/30 px-2.5 py-1 rounded-full flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      AI Failed
-                    </span>
-                  ) : (
-                    <span className="text-[11px] font-bold text-[#F5F1E8] bg-[#161F30] border border-[#E8B565]/40 px-2.5 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                      <Sparkles className="w-3 h-3" />
-                      AI Summary
-                    </span>
-                  )}
-
-                  {isExpanded ? (
-                    <ChevronUp className="w-4 h-4 text-[#A6ACC0]" />
-                  ) : (
-                    <ChevronDown className="w-4 h-4 text-[#A6ACC0]" />
-                  )}
-                </div>
-              </div>
-
-              {/* Expanded Details */}
-              {isExpanded && (
-                <div className="p-5 border-t border-[#2B3854] space-y-4 animate-fade-in">
-                  
                   {/* 1. Full Official Recorded Minutes (PRD Section 3.7 & Requirement 4) */}
                   <div
                     className={`bg-[#1C2740]/50 p-5 rounded-2xl space-y-2 border border-transparent transition-opacity ${

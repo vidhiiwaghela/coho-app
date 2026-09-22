@@ -207,23 +207,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
 
-          <div className="mt-4 pt-4 border-t border-white/[0.06] flex items-center justify-between">
+          <div className="mt-4 pt-4 border-t border-white/[0.06]">
             <div className="text-xs text-[#A6ACC0]">
               {isAdmin ? "Society Overview" : `Flat ${currentUser.flatNumber} • ${currentUser.isOwner ? "Owner" : "Resident"}`}
             </div>
-            {duesOutstanding > 0 ? (
-              <button
-                onClick={() => onNavigate("payments")}
-                className="tap-scale-soft flex items-center gap-1.5 text-[11px] font-bold text-[#E2A94D] bg-[#E2A94D]/10 border border-[#E2A94D]/25 rounded-full px-2.5 py-1"
-              >
-                <Wallet className="w-3 h-3" />
-                ₹{duesOutstanding.toLocaleString("en-IN")} due
-              </button>
-            ) : (
-              <span className="flex items-center gap-1.5 text-[11px] font-bold text-[#8FBF8A] bg-[#8FBF8A]/10 border border-[#8FBF8A]/25 rounded-full px-2.5 py-1">
-                All dues clear
-              </span>
-            )}
           </div>
         </div>
       </div>
