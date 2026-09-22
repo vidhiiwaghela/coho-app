@@ -131,7 +131,7 @@ const IosToggle: React.FC<IosToggleProps> = ({ checked, onChange, id, ariaLabel 
       id={id}
       onClick={() => onChange(!checked)}
       className={`w-12 h-7 rounded-full transition-colors duration-200 cursor-pointer flex items-center p-0.5 focus:outline-none shrink-0 ${
-        checked ? "bg-[#4FD1A1]" : "bg-[#16233A]"
+        checked ? "bg-[#8FBF8A]" : "bg-[#1C2740]"
       }`}
     >
       <span
@@ -236,29 +236,29 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
   ];
 
   return (
-    <div className="bg-[#0A1120] min-h-screen text-[#F3F5F9] pb-16 flex flex-col items-center animate-fade-in">
-      <div className="w-full max-w-lg min-h-screen flex flex-col relative sm:border-x sm:border-[#22304A] sm:shadow-sm">
+    <div className="bg-[#0E1420] min-h-screen text-[#F5F1E8] pb-16 flex flex-col items-center animate-fade-in">
+      <div className="w-full max-w-lg min-h-screen flex flex-col relative sm:border-x sm:border-[#2B3854] sm:shadow-sm">
         {/* Floating Test Push Banner Toast */}
         {testNotification && (
           <div className="fixed top-4 inset-x-4 max-w-md mx-auto z-50 animate-bounce">
-            <div className="bg-[#111C2E] border border-[#22304A] rounded-2xl p-4 shadow-sm flex items-start justify-between gap-3 text-left">
+            <div className="bg-[#161F30] border border-[#2B3854] rounded-2xl p-4 shadow-sm flex items-start justify-between gap-3 text-left">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl bg-[#EFE4CC] text-[#0A1120] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-xl bg-[#E8B565] text-[#0E1420] flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
                   <Bell className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#8C97AD]">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#A6ACC0]">
                       CoHo Society Push • Just Now
                     </span>
                   </div>
-                  <h4 className="text-xs font-bold text-[#F3F5F9] mt-0.5">{testNotification.title}</h4>
-                  <p className="text-[11px] text-[#8C97AD] mt-0.5 leading-relaxed">{testNotification.body}</p>
+                  <h4 className="text-xs font-bold text-[#F5F1E8] mt-0.5">{testNotification.title}</h4>
+                  <p className="text-[11px] text-[#A6ACC0] mt-0.5 leading-relaxed">{testNotification.body}</p>
                 </div>
               </div>
               <button
                 onClick={() => setTestNotification(null)}
-                className="text-[#8C97AD] hover:text-[#F3F5F9] p-1 rounded-full hover:bg-[#16233A]/40"
+                className="text-[#A6ACC0] hover:text-[#F5F1E8] p-1 rounded-full hover:bg-[#1C2740]/40"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -267,17 +267,17 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
         )}
 
         {/* 2. TOP NAVIGATION BAR (Exact reference layout) */}
-        <header className="flex items-center justify-between px-4 pt-12 pb-3 bg-[#0A1120] sticky top-0 z-20">
+        <header className="flex items-center justify-between px-4 pt-12 pb-3 bg-[#0E1420] sticky top-0 z-20">
           <button
             onClick={onBack}
-            className="w-9 h-9 rounded-full bg-[#111C2E] flex items-center justify-center text-[#F3F5F9] border border-[#22304A] hover:bg-[#16233A] transition-all cursor-pointer shadow-sm active:scale-95"
+            className="w-9 h-9 rounded-full bg-[#161F30] flex items-center justify-center text-[#F5F1E8] border border-[#2B3854] hover:bg-[#1C2740] transition-all cursor-pointer shadow-sm active:scale-95"
             aria-label="Go Back"
             id="btn-back-notification-center"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
 
-          <h1 className="text-[17px] font-semibold text-[#F3F5F9]">Notifications</h1>
+          <h1 className="text-[17px] font-semibold text-[#F5F1E8]">Notifications</h1>
 
           <div className="w-9" aria-hidden="true" />
         </header>
@@ -286,14 +286,14 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
         <div className="flex-1 space-y-5 pt-1">
           {/* GROUP 1: EMERGENCY & UTILITIES */}
           <div>
-            <div className="text-[13px] font-medium text-[#8C97AD] px-5 pt-4 pb-1 uppercase tracking-wide">
+            <div className="text-[13px] font-medium text-[#A6ACC0] px-5 pt-4 pb-1 uppercase tracking-wide">
               Emergency & Utilities
             </div>
-            <div className="mx-4 my-1 bg-[#111C2E] rounded-2xl border border-[#22304A] overflow-hidden shadow-sm">
+            <div className="mx-4 my-1 bg-[#161F30] rounded-2xl border border-[#2B3854] overflow-hidden shadow-sm">
               {/* Row 1 */}
-              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F3F5F9]">
+              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F5F1E8]">
                 <div className="flex items-center gap-3 pr-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#16233A]/50 text-[#F3F5F9] flex items-center justify-center shrink-0">
+                  <div className="w-7 h-7 rounded-lg bg-[#1C2740]/50 text-[#F5F1E8] flex items-center justify-center shrink-0">
                     <Zap className="w-4 h-4 text-[#A9B4CC]" />
                   </div>
                   <span className="font-normal leading-snug">Power & Generator Outages</span>
@@ -307,11 +307,11 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
               </div>
 
               {/* Row 2 */}
-              <div className="border-t border-[#22304A] ml-4" />
-              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F3F5F9]">
+              <div className="border-t border-[#2B3854] ml-4" />
+              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F5F1E8]">
                 <div className="flex items-center gap-3 pr-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#16233A]/50 text-[#F3F5F9] flex items-center justify-center shrink-0">
-                    <Droplets className="w-4 h-4 text-[#4FD1A1]" />
+                  <div className="w-7 h-7 rounded-lg bg-[#1C2740]/50 text-[#F5F1E8] flex items-center justify-center shrink-0">
+                    <Droplets className="w-4 h-4 text-[#8FBF8A]" />
                   </div>
                   <span className="font-normal leading-snug">Municipal Water Supply Alerts</span>
                 </div>
@@ -324,11 +324,11 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
               </div>
 
               {/* Row 3 */}
-              <div className="border-t border-[#22304A] ml-4" />
-              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F3F5F9]">
+              <div className="border-t border-[#2B3854] ml-4" />
+              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F5F1E8]">
                 <div className="flex items-center gap-3 pr-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#16233A]/50 text-[#F3F5F9] flex items-center justify-center shrink-0">
-                    <ArrowUpDown className="w-4 h-4 text-[#8C97AD]" />
+                  <div className="w-7 h-7 rounded-lg bg-[#1C2740]/50 text-[#F5F1E8] flex items-center justify-center shrink-0">
+                    <ArrowUpDown className="w-4 h-4 text-[#A6ACC0]" />
                   </div>
                   <span className="font-normal leading-snug">Lift & Elevator Maintenance</span>
                 </div>
@@ -340,22 +340,22 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
                 />
               </div>
             </div>
-            <div className="text-[12px] text-[#8C97AD]/80 px-5 pt-1.5 pb-1 leading-relaxed">
+            <div className="text-[12px] text-[#A6ACC0]/80 px-5 pt-1.5 pb-1 leading-relaxed">
               Critical infrastructure alerts deliver instant audible push notifications regardless of quiet hours.
             </div>
           </div>
 
           {/* GROUP 2: GOVERNANCE & NOTICES */}
           <div>
-            <div className="text-[13px] font-medium text-[#8C97AD] px-5 pt-4 pb-1 uppercase tracking-wide">
+            <div className="text-[13px] font-medium text-[#A6ACC0] px-5 pt-4 pb-1 uppercase tracking-wide">
               Governance & Notices
             </div>
-            <div className="mx-4 my-1 bg-[#111C2E] rounded-2xl border border-[#22304A] overflow-hidden shadow-sm">
+            <div className="mx-4 my-1 bg-[#161F30] rounded-2xl border border-[#2B3854] overflow-hidden shadow-sm">
               {/* Row 1 */}
-              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F3F5F9]">
+              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F5F1E8]">
                 <div className="flex items-center gap-3 pr-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#16233A]/50 text-[#F3F5F9] flex items-center justify-center shrink-0">
-                    <FileText className="w-4 h-4 text-[#F3F5F9]" />
+                  <div className="w-7 h-7 rounded-lg bg-[#1C2740]/50 text-[#F5F1E8] flex items-center justify-center shrink-0">
+                    <FileText className="w-4 h-4 text-[#F5F1E8]" />
                   </div>
                   <span className="font-normal leading-snug">New Official Circulars</span>
                 </div>
@@ -368,11 +368,11 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
               </div>
 
               {/* Row 2 */}
-              <div className="border-t border-[#22304A] ml-4" />
-              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F3F5F9]">
+              <div className="border-t border-[#2B3854] ml-4" />
+              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F5F1E8]">
                 <div className="flex items-center gap-3 pr-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#16233A]/50 text-[#F3F5F9] flex items-center justify-center shrink-0">
-                    <Users className="w-4 h-4 text-[#8C97AD]" />
+                  <div className="w-7 h-7 rounded-lg bg-[#1C2740]/50 text-[#F5F1E8] flex items-center justify-center shrink-0">
+                    <Users className="w-4 h-4 text-[#A6ACC0]" />
                   </div>
                   <span className="font-normal leading-snug">AGM & Committee Minutes</span>
                 </div>
@@ -385,20 +385,20 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
               </div>
 
               {/* Row 3: Navigation row for Alert Preview */}
-              <div className="border-t border-[#22304A] ml-4" />
+              <div className="border-t border-[#2B3854] ml-4" />
               <button
                 type="button"
                 onClick={() => setPreviewSheetOpen(true)}
-                className="w-full px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F3F5F9] hover:bg-[#16233A]/30 transition text-left cursor-pointer"
+                className="w-full px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F5F1E8] hover:bg-[#1C2740]/30 transition text-left cursor-pointer"
                 id="row-show-alert-preview"
               >
                 <div className="flex items-center gap-3 pr-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#16233A]/50 text-[#F3F5F9] flex items-center justify-center shrink-0">
-                    <Sparkles className="w-4 h-4 text-[#F3F5F9]" />
+                  <div className="w-7 h-7 rounded-lg bg-[#1C2740]/50 text-[#F5F1E8] flex items-center justify-center shrink-0">
+                    <Sparkles className="w-4 h-4 text-[#F5F1E8]" />
                   </div>
                   <span className="font-normal leading-snug">Show Alert Preview</span>
                 </div>
-                <span className="text-[#8C97AD] flex items-center gap-1 text-[14px]">
+                <span className="text-[#A6ACC0] flex items-center gap-1 text-[14px]">
                   {prefs.alertPreviewMode === "summary_decisions"
                     ? "Summary & Decisions"
                     : prefs.alertPreviewMode === "full_notice"
@@ -408,21 +408,21 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
                 </span>
               </button>
             </div>
-            <div className="text-[12px] text-[#8C97AD]/80 px-5 pt-1.5 pb-1 leading-relaxed">
+            <div className="text-[12px] text-[#A6ACC0]/80 px-5 pt-1.5 pb-1 leading-relaxed">
               Notices and meeting summaries will appear with AI-translated key decision bullet points.
             </div>
           </div>
 
           {/* GROUP 3: SOCIETY BILLING & AMENITIES */}
           <div>
-            <div className="text-[13px] font-medium text-[#8C97AD] px-5 pt-4 pb-1 uppercase tracking-wide">
+            <div className="text-[13px] font-medium text-[#A6ACC0] px-5 pt-4 pb-1 uppercase tracking-wide">
               Society Billing & Amenities
             </div>
-            <div className="mx-4 my-1 bg-[#111C2E] rounded-2xl border border-[#22304A] overflow-hidden shadow-sm">
+            <div className="mx-4 my-1 bg-[#161F30] rounded-2xl border border-[#2B3854] overflow-hidden shadow-sm">
               {/* Row 1 */}
-              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F3F5F9]">
+              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F5F1E8]">
                 <div className="flex items-center gap-3 pr-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#16233A]/50 text-[#F3F5F9] flex items-center justify-center shrink-0">
+                  <div className="w-7 h-7 rounded-lg bg-[#1C2740]/50 text-[#F5F1E8] flex items-center justify-center shrink-0">
                     <CreditCard className="w-4 h-4 text-[#A9B4CC]" />
                   </div>
                   <span className="font-normal leading-snug">Maintenance Due Reminders</span>
@@ -436,11 +436,11 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
               </div>
 
               {/* Row 2 */}
-              <div className="border-t border-[#22304A] ml-4" />
-              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F3F5F9]">
+              <div className="border-t border-[#2B3854] ml-4" />
+              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F5F1E8]">
                 <div className="flex items-center gap-3 pr-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#16233A]/50 text-[#F3F5F9] flex items-center justify-center shrink-0">
-                    <FileCheck className="w-4 h-4 text-[#4FD1A1]" />
+                  <div className="w-7 h-7 rounded-lg bg-[#1C2740]/50 text-[#F5F1E8] flex items-center justify-center shrink-0">
+                    <FileCheck className="w-4 h-4 text-[#8FBF8A]" />
                   </div>
                   <span className="font-normal leading-snug">Document & NOC Approvals</span>
                 </div>
@@ -453,11 +453,11 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
               </div>
 
               {/* Row 3 */}
-              <div className="border-t border-[#22304A] ml-4" />
-              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F3F5F9]">
+              <div className="border-t border-[#2B3854] ml-4" />
+              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F5F1E8]">
                 <div className="flex items-center gap-3 pr-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#16233A]/50 text-[#F3F5F9] flex items-center justify-center shrink-0">
-                    <Calendar className="w-4 h-4 text-[#8C97AD]" />
+                  <div className="w-7 h-7 rounded-lg bg-[#1C2740]/50 text-[#F5F1E8] flex items-center justify-center shrink-0">
+                    <Calendar className="w-4 h-4 text-[#A6ACC0]" />
                   </div>
                   <span className="font-normal leading-snug">Clubhouse & Ground Bookings</span>
                 </div>
@@ -473,33 +473,33 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
 
           {/* GROUP 4: PREFERENCES */}
           <div>
-            <div className="text-[13px] font-medium text-[#8C97AD] px-5 pt-4 pb-1 uppercase tracking-wide">
+            <div className="text-[13px] font-medium text-[#A6ACC0] px-5 pt-4 pb-1 uppercase tracking-wide">
               Preferences
             </div>
-            <div className="mx-4 my-1 bg-[#111C2E] rounded-2xl border border-[#22304A] overflow-hidden shadow-sm">
+            <div className="mx-4 my-1 bg-[#161F30] rounded-2xl border border-[#2B3854] overflow-hidden shadow-sm">
               {/* Row 1: Notification Sound Navigation */}
               <button
                 type="button"
                 onClick={() => setSoundSheetOpen(true)}
-                className="w-full px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F3F5F9] hover:bg-[#16233A]/30 transition text-left cursor-pointer"
+                className="w-full px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F5F1E8] hover:bg-[#1C2740]/30 transition text-left cursor-pointer"
                 id="row-notification-sound"
               >
                 <div className="flex items-center gap-3 pr-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#16233A]/50 text-[#F3F5F9] flex items-center justify-center shrink-0">
-                    <Volume2 className="w-4 h-4 text-[#F3F5F9]" />
+                  <div className="w-7 h-7 rounded-lg bg-[#1C2740]/50 text-[#F5F1E8] flex items-center justify-center shrink-0">
+                    <Volume2 className="w-4 h-4 text-[#F5F1E8]" />
                   </div>
                   <span className="font-normal leading-snug">Notification Sound</span>
                 </div>
-                <span className="text-[#8C97AD] flex items-center gap-1 text-[14px]">
+                <span className="text-[#A6ACC0] flex items-center gap-1 text-[14px]">
                   {prefs.soundType} <ChevronRight className="w-4 h-4" />
                 </span>
               </button>
 
               {/* Row 2 */}
-              <div className="border-t border-[#22304A] ml-4" />
-              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F3F5F9]">
+              <div className="border-t border-[#2B3854] ml-4" />
+              <div className="px-4 py-3.5 flex items-center justify-between text-[15px] text-[#F5F1E8]">
                 <div className="flex items-center gap-3 pr-2">
-                  <div className="w-7 h-7 rounded-lg bg-[#16233A]/50 text-[#F3F5F9] flex items-center justify-center shrink-0">
+                  <div className="w-7 h-7 rounded-lg bg-[#1C2740]/50 text-[#F5F1E8] flex items-center justify-center shrink-0">
                     <span className="text-xs font-bold font-mono">📳</span>
                   </div>
                   <span className="font-normal leading-snug">Vibrate On Delivery</span>
@@ -517,11 +517,11 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
           {/* GROUP 5: SYSTEM ACTIONS */}
           <div className="space-y-3 pt-2">
             {/* Separate Card 1: Send Test Society Notification */}
-            <div className="mx-4 bg-[#111C2E] rounded-2xl border border-[#22304A] overflow-hidden shadow-sm">
+            <div className="mx-4 bg-[#161F30] rounded-2xl border border-[#2B3854] overflow-hidden shadow-sm">
               <button
                 type="button"
                 onClick={handleSendTestNotification}
-                className="w-full py-3.5 text-center text-[#F3F5F9] font-medium hover:bg-[#16233A]/40 active:scale-[0.99] transition cursor-pointer text-[15px]"
+                className="w-full py-3.5 text-center text-[#F5F1E8] font-medium hover:bg-[#1C2740]/40 active:scale-[0.99] transition cursor-pointer text-[15px]"
                 id="btn-send-test-notification"
               >
                 Send Test Society Notification
@@ -529,11 +529,11 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
             </div>
 
             {/* Separate Card 2: Reset All Notification Preferences */}
-            <div className="mx-4 bg-[#111C2E] rounded-2xl border border-[#22304A] overflow-hidden shadow-sm">
+            <div className="mx-4 bg-[#161F30] rounded-2xl border border-[#2B3854] overflow-hidden shadow-sm">
               <button
                 type="button"
                 onClick={() => setResetConfirmOpen(true)}
-                className="w-full py-3.5 text-center text-[#F0736A] font-medium hover:bg-[#2A1418]/40 active:scale-[0.99] transition cursor-pointer text-[15px]"
+                className="w-full py-3.5 text-center text-[#E2685B] font-medium hover:bg-[#2A1418]/40 active:scale-[0.99] transition cursor-pointer text-[15px]"
                 id="btn-reset-notification-prefs"
               >
                 Reset All Notification Preferences
@@ -545,12 +545,12 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
         {/* MODAL 1: Notification Sound Picker Sheet */}
         {soundSheetOpen && (
           <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-            <div className="w-full max-w-sm bg-[#111C2E] border border-[#22304A] rounded-t-3xl sm:rounded-2xl p-5 space-y-4 shadow-sm">
-              <div className="flex items-center justify-between border-b border-[#22304A] pb-3">
-                <h3 className="text-base font-bold text-[#F3F5F9]">Notification Sound</h3>
+            <div className="modal-pop-in w-full max-w-sm bg-[#161F30] border border-[#2B3854] rounded-t-3xl sm:rounded-2xl p-5 space-y-4 shadow-sm">
+              <div className="flex items-center justify-between border-b border-[#2B3854] pb-3">
+                <h3 className="text-base font-bold text-[#F5F1E8]">Notification Sound</h3>
                 <button
                   onClick={() => setSoundSheetOpen(false)}
-                  className="w-8 h-8 rounded-full bg-[#16233A]/50 text-[#8C97AD] hover:text-[#F3F5F9] flex items-center justify-center"
+                  className="w-8 h-8 rounded-full bg-[#1C2740]/50 text-[#A6ACC0] hover:text-[#F5F1E8] flex items-center justify-center"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -568,8 +568,8 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
                       }}
                       className={`w-full px-3.5 py-3 rounded-xl flex items-center justify-between transition text-left cursor-pointer ${
                         isSelected
-                          ? "bg-[#16233A]/60 text-[#F3F5F9] font-bold"
-                          : "text-[#8C97AD] hover:text-[#F3F5F9] hover:bg-[#16233A]/30"
+                          ? "bg-[#1C2740]/60 text-[#F5F1E8] font-bold"
+                          : "text-[#A6ACC0] hover:text-[#F5F1E8] hover:bg-[#1C2740]/30"
                       }`}
                     >
                       <span className="text-sm">{snd}</span>
@@ -581,7 +581,7 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
 
               <button
                 onClick={() => setSoundSheetOpen(false)}
-                className="w-full py-3 bg-[#EFE4CC] hover:bg-[#F7F0DF] text-[#0A1120] font-bold rounded-xl text-xs shadow-sm transition"
+                className="w-full py-3 bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] font-bold rounded-xl text-xs shadow-sm transition"
               >
                 Done
               </button>
@@ -592,12 +592,12 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
         {/* MODAL 2: Alert Preview Mode Picker Sheet */}
         {previewSheetOpen && (
           <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-            <div className="w-full max-w-sm bg-[#111C2E] border border-[#22304A] rounded-t-3xl sm:rounded-2xl p-5 space-y-4 shadow-sm">
-              <div className="flex items-center justify-between border-b border-[#22304A] pb-3">
-                <h3 className="text-base font-bold text-[#F3F5F9]">Show Alert Preview</h3>
+            <div className="modal-pop-in w-full max-w-sm bg-[#161F30] border border-[#2B3854] rounded-t-3xl sm:rounded-2xl p-5 space-y-4 shadow-sm">
+              <div className="flex items-center justify-between border-b border-[#2B3854] pb-3">
+                <h3 className="text-base font-bold text-[#F5F1E8]">Show Alert Preview</h3>
                 <button
                   onClick={() => setPreviewSheetOpen(false)}
-                  className="w-8 h-8 rounded-full bg-[#16233A]/50 text-[#8C97AD] hover:text-[#F3F5F9] flex items-center justify-center"
+                  className="w-8 h-8 rounded-full bg-[#1C2740]/50 text-[#A6ACC0] hover:text-[#F5F1E8] flex items-center justify-center"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -614,13 +614,13 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
                       }}
                       className={`w-full p-3 rounded-xl flex items-start justify-between gap-2 transition text-left cursor-pointer border ${
                         isSelected
-                          ? "bg-[#16233A]/60 border-[#EFE4CC]/30 text-[#F3F5F9]"
-                          : "bg-[#0A1120]/50 border-transparent text-[#8C97AD] hover:text-[#F3F5F9]"
+                          ? "bg-[#1C2740]/60 border-[#E8B565]/30 text-[#F5F1E8]"
+                          : "bg-[#0E1420]/50 border-transparent text-[#A6ACC0] hover:text-[#F5F1E8]"
                       }`}
                     >
                       <div>
-                        <div className="text-sm font-bold text-[#F3F5F9]">{opt.label}</div>
-                        <div className="text-[11px] text-[#8C97AD] mt-0.5">{opt.desc}</div>
+                        <div className="text-sm font-bold text-[#F5F1E8]">{opt.label}</div>
+                        <div className="text-[11px] text-[#A6ACC0] mt-0.5">{opt.desc}</div>
                       </div>
                       {isSelected && <Check className="w-4 h-4 text-[#4EBA86] shrink-0 mt-0.5" />}
                     </button>
@@ -630,7 +630,7 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
 
               <button
                 onClick={() => setPreviewSheetOpen(false)}
-                className="w-full py-3 bg-[#EFE4CC] hover:bg-[#F7F0DF] text-[#0A1120] font-bold rounded-xl text-xs shadow-sm transition"
+                className="w-full py-3 bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] font-bold rounded-xl text-xs shadow-sm transition"
               >
                 Done
               </button>
@@ -641,13 +641,13 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
         {/* MODAL 3: Reset Confirmation Dialog */}
         {resetConfirmOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fade-in">
-            <div className="w-full max-w-sm bg-[#111C2E] border border-[#22304A] rounded-2xl p-5 space-y-4 shadow-sm text-center">
-              <div className="w-12 h-12 rounded-2xl bg-[#2A1418] text-[#F0736A] border border-[#F0736A]/30 flex items-center justify-center mx-auto">
+            <div className="modal-pop-in w-full max-w-sm bg-[#161F30] border border-[#2B3854] rounded-2xl p-5 space-y-4 shadow-sm text-center">
+              <div className="w-12 h-12 rounded-2xl bg-[#2A1418] text-[#E2685B] border border-[#E2685B]/30 flex items-center justify-center mx-auto">
                 <AlertTriangle className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-[#F3F5F9]">Reset All Preferences?</h3>
-                <p className="text-xs text-[#8C97AD] mt-1.5 leading-relaxed">
+                <h3 className="text-base font-bold text-[#F5F1E8]">Reset All Preferences?</h3>
+                <p className="text-xs text-[#A6ACC0] mt-1.5 leading-relaxed">
                   All alert switches, chime sounds, and preview rules will be restored to their society default settings.
                 </p>
               </div>
@@ -656,14 +656,14 @@ export const NotificationCenterView: React.FC<NotificationCenterViewProps> = ({ 
                 <button
                   type="button"
                   onClick={() => setResetConfirmOpen(false)}
-                  className="py-2.5 rounded-xl bg-[#16233A]/50 text-[#8C97AD] hover:text-[#F3F5F9] text-xs font-semibold"
+                  className="py-2.5 rounded-xl bg-[#1C2740]/50 text-[#A6ACC0] hover:text-[#F5F1E8] text-xs font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleResetPreferences}
-                  className="py-2.5 rounded-xl bg-[#2A1418] text-[#F0736A] border border-[#F0736A]/30 hover:bg-[#2A1418]/80 text-xs font-bold"
+                  className="py-2.5 rounded-xl bg-[#2A1418] text-[#E2685B] border border-[#E2685B]/30 hover:bg-[#2A1418]/80 text-xs font-bold"
                   id="btn-confirm-reset-prefs"
                 >
                   Reset Defaults

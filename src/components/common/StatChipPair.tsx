@@ -24,26 +24,26 @@ export const StatChip: React.FC<StatChipProps> = ({
     <div
       onClick={onClick}
       className={cn(
-        "flex-1 bg-[#111C2E] border border-[#22304A] rounded-2xl p-5 shadow-sm transition-all duration-200 hover:border-[#EFE4CC] hover:bg-[#16233A] hover:scale-[1.02] flex flex-col justify-between select-none group",
+        "flex-1 bg-[#161F30] border border-[#2B3854] rounded-2xl p-5 shadow-sm transition-all duration-200 hover:border-[#E8B565] hover:bg-[#1C2740] hover:scale-[1.02] flex flex-col justify-between select-none group",
         isClickable && "cursor-pointer"
       )}
     >
       <div className="flex items-center justify-between gap-1 mb-2">
-        <span className="text-xs font-semibold tracking-wider uppercase text-[#F3F5F9]">
+        <span className="text-xs font-semibold tracking-wider uppercase text-[#F5F1E8]">
           {label}
         </span>
         {isClickable && (
-          <ChevronRight className="w-4 h-4 text-[#8C97AD] group-hover:text-[#F3F5F9] group-hover:translate-x-0.5 transition-all" />
+          <ChevronRight className="w-4 h-4 text-[#A6ACC0] group-hover:text-[#F5F1E8] group-hover:translate-x-0.5 transition-all" />
         )}
       </div>
 
       <div className="flex items-baseline gap-2">
-        {Icon && <Icon className="w-5 h-5 mb-0.5 text-[#F3F5F9] opacity-90 shrink-0" />}
-        <div className="text-2xl font-bold text-[#F3F5F9] tracking-tight">{value}</div>
+        {Icon && <Icon className="w-5 h-5 mb-0.5 text-[#F5F1E8] opacity-90 shrink-0" />}
+        <div className="text-2xl font-bold text-[#F5F1E8] tracking-tight">{value}</div>
       </div>
 
       {subtext && (
-        <div className="text-sm text-[#8C97AD] mt-1 font-normal">
+        <div className="text-sm text-[#A6ACC0] mt-1 font-normal">
           {subtext}
         </div>
       )}

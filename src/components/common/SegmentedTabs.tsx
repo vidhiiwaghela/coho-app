@@ -37,7 +37,7 @@ export function SegmentedTabs<T extends string>({
               id={`tab-btn-${tab.id}`}
               type="button"
               className={cn(
-                "rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 shrink-0 inline-flex items-center justify-center",
+                "tap-scale rounded-full px-5 py-2 text-sm font-medium transition-all duration-200 shrink-0 inline-flex items-center justify-center",
                 isActive
                   ? "bg-[var(--accent)] text-[var(--on-accent)] font-bold"
                   : "bg-[var(--surface)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text)]"

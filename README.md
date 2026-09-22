@@ -6,11 +6,12 @@ A modern, mobile-first web application for housing societies (RWA/CHS) built fol
 
 ## 🎨 Visual Design System
 
-Implements the exact dark-card fintech/community hybrid visual language:
-- **Base Surface (`bgBase`):** `#F5F5F0` (warm off-white)
-- **Primary Cards (`surfaceDark`):** `#161616` (deep near-black)
-- **Secondary Surfaces (`surfaceDark2`):** `#1F1F1F`
-- **Spotlight Accent (`accentLime`):** `#D6FF3F` (used strictly for primary actions: Pay button, active tab, dues badge)
+Implements a unified navy + warm-gold dark fintech/community hybrid visual language:
+- **Base Surface (`bgBase`):** `#0E1420` (deep navy)
+- **Primary Cards (`surfaceDark`):** `#161F30`
+- **Secondary Surfaces (`surfaceDark2`):** `#1C2740`
+- **Spotlight Accent (`accentLime`):** `#E8B565` (warm gold, used strictly for primary actions: Pay button, active tab, dues badge)
+- **Typography:** Manrope (headings/emphasis) + Inter (body/UI).
 - **Shapes:** Full pill radiuses (`rounded-pill`), 24–28px card corners, floating dark navigation bar.
 - **Numbers:** Large bold typography (₹ amounts) as visual anchors.
 

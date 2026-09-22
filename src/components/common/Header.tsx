@@ -25,7 +25,14 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-[var(--bg)] border-b border-[var(--border)] px-4 py-3">
+      <header
+        className="sticky top-0 z-40 w-full border-b border-[var(--border)] px-4 py-3"
+        style={{
+          background: "rgba(14, 20, 32, 0.72)",
+          backdropFilter: "blur(16px) saturate(1.2)",
+          WebkitBackdropFilter: "blur(16px) saturate(1.2)",
+        }}
+      >
         <div className="max-w-xl mx-auto flex items-center justify-between gap-3">
           {/* Left side: CoHo Logo & Society / Resident Details */}
           <div className="flex items-center gap-3.5 min-w-0">

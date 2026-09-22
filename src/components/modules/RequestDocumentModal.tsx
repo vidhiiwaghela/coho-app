@@ -43,23 +43,27 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
   const [note, setNote] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Clear form state when modal closes
+  // Prefill or clear form state when modal opens/closes
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      if (currentUser?.email && !deliveryEmail) {
+        setDeliveryEmail(currentUser.email);
+      }
+    } else {
       setDeliveryEmail("");
       setEmailError("");
       setCustomDocName("");
       setNote("");
     }
-  }, [isOpen]);
+  }, [isOpen, currentUser]);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!deliveryEmail.trim() || !emailRegex.test(deliveryEmail.trim())) {
-      setEmailError("Please enter a valid email address.");
+    if (copyType === "digital" && (!deliveryEmail.trim() || !emailRegex.test(deliveryEmail.trim()))) {
+      setEmailError("Please enter a valid email address to receive your digital copy.");
       return;
     }
     setEmailError("");
@@ -89,11 +93,11 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-[#111C2E] border border-[#22304A] rounded-2xl w-full max-w-md shadow-sm p-6 relative animate-scale-up space-y-5 text-[#F3F5F9]">
+      <div className="bg-[#161F30] border border-[#2B3854] rounded-2xl w-full max-w-md shadow-sm p-6 relative animate-scale-up space-y-5 text-[#F5F1E8]">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-[#8C97AD] hover:text-[#F3F5F9] p-1.5 rounded-full hover:bg-[#16233A] transition-colors"
+          className="absolute top-4 right-4 text-[#A6ACC0] hover:text-[#F5F1E8] p-1.5 rounded-full hover:bg-[#1C2740] transition-colors"
           id="btn-close-request-doc"
         >
           <X className="w-5 h-5" />
@@ -101,14 +105,14 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
 
         {/* Modal Header */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#EFE4CC]/15 text-[#F3F5F9] border border-[#EFE4CC]/30 flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#E8B565]/15 text-[#F5F1E8] border border-[#E8B565]/30 flex items-center justify-center shrink-0">
             <FileText className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-[#F3F5F9]">
+            <h3 className="text-base font-bold text-[#F5F1E8]">
               Request Society Document
             </h3>
-            <p className="text-xs text-[#8C97AD]">
+            <p className="text-xs text-[#A6ACC0]">
               Flat {currentUser.flatNumber} • {currentUser.residentName}
             </p>
           </div>
@@ -116,13 +120,13 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
 
         {isSubmitted ? (
           <div className="py-8 text-center space-y-3">
-            <div className="w-14 h-14 rounded-full bg-[#111C2E] border border-[#EFE4CC]/40 text-[#F3F5F9] flex items-center justify-center mx-auto">
+            <div className="w-14 h-14 rounded-full bg-[#161F30] border border-[#E8B565]/40 text-[#F5F1E8] flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <h4 className="text-base font-bold text-[#F3F5F9]">
+            <h4 className="text-base font-bold text-[#F5F1E8]">
               Document Request Submitted!
             </h4>
-            <p className="text-xs text-[#8C97AD]">
+            <p className="text-xs text-[#A6ACC0]">
               Your request has been routed to the Managing Committee queue.
             </p>
           </div>
@@ -130,17 +134,17 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Document Type Dropdown */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-[#8C97AD] block">
+              <label className="text-xs font-semibold uppercase tracking-wider text-[#A6ACC0] block">
                 Select Document
               </label>
               <select
                 value={docType}
                 onChange={(e) => setDocType(e.target.value as any)}
-                className="w-full bg-[#0A1120] text-[#F3F5F9] border border-[#22304A] rounded-xl px-3.5 py-3 text-sm font-medium focus:outline-none focus:border-[#EFE4CC] cursor-pointer"
+                className="w-full bg-[#0E1420] text-[#F5F1E8] border border-[#2B3854] rounded-xl px-3.5 py-3 text-sm font-medium focus:outline-none focus:border-[#E8B565] cursor-pointer"
                 id="select-document-type"
               >
                 {DOCUMENT_OPTIONS.map((opt) => (
-                  <option key={opt.id} value={opt.id} className="bg-[#111C2E] text-[#F3F5F9]">
+                  <option key={opt.id} value={opt.id} className="bg-[#161F30] text-[#F5F1E8]">
                     {opt.label}
                   </option>
                 ))}
@@ -150,7 +154,7 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
             {/* Custom Name field if "Other" is selected */}
             {docType === "other" && (
               <div className="space-y-1.5 animate-fade-in">
-                <label className="text-xs font-semibold uppercase tracking-wider text-[#8C97AD] block">
+                <label className="text-xs font-semibold uppercase tracking-wider text-[#A6ACC0] block">
                   Document Name / Title
                 </label>
                 <input
@@ -159,7 +163,7 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
                   value={customDocName}
                   onChange={(e) => setCustomDocName(e.target.value)}
                   placeholder="e.g., Water Meter NOC, Gas Line Permission..."
-                  className="w-full bg-[#0A1120] text-[#F3F5F9] border border-[#22304A] rounded-xl px-3.5 py-2.5 text-sm placeholder:text-[#8C97AD]/50 focus:outline-none focus:border-[#EFE4CC]"
+                  className="w-full bg-[#0E1420] text-[#F5F1E8] border border-[#2B3854] rounded-xl px-3.5 py-2.5 text-sm placeholder:text-[#A6ACC0]/50 focus:outline-none focus:border-[#E8B565]"
                   id="input-custom-doc-name"
                 />
               </div>
@@ -168,15 +172,15 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
             {/* Mandatory Delivery Email Address Field */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold uppercase tracking-wider text-[#8C97AD] block">
+                <label className="text-xs font-semibold uppercase tracking-wider text-[#A6ACC0] block">
                   Delivery Email Address
                 </label>
-                <span className="text-[10px] text-[#F3F5F9] font-bold bg-[#16233A]/50 px-2 py-0.5 rounded-full border border-[#22304A]">
+                <span className="text-[10px] text-[#F5F1E8] font-bold bg-[#1C2740]/50 px-2 py-0.5 rounded-full border border-[#2B3854]">
                   Required
                 </span>
               </div>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#8C97AD]">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#A6ACC0]">
                   <Mail className="w-4 h-4" />
                 </div>
                 <input
@@ -188,18 +192,18 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
                     if (emailError) setEmailError("");
                   }}
                   placeholder="Enter your email address"
-                  className={`w-full bg-[#0A1120] text-[#F3F5F9] border rounded-xl pl-10 pr-3.5 py-2.5 text-sm placeholder:text-[#8C97AD]/50 focus:outline-none transition-colors ${
+                  className={`w-full bg-[#0E1420] text-[#F5F1E8] border rounded-xl pl-10 pr-3.5 py-2.5 text-sm placeholder:text-[#A6ACC0]/50 focus:outline-none transition-colors ${
                     emailError
-                      ? "border-[#F0736A] focus:border-[#F0736A]"
-                      : "border-[#22304A] focus:border-[#EFE4CC]"
+                      ? "border-[#E2685B] focus:border-[#E2685B]"
+                      : "border-[#2B3854] focus:border-[#E8B565]"
                   }`}
                   id="input-delivery-email"
                 />
               </div>
               {emailError ? (
-                <p className="text-[11px] text-[#F0736A] font-medium">{emailError}</p>
+                <p className="text-[11px] text-[#E2685B] font-medium">{emailError}</p>
               ) : (
-                <p className="text-[11px] text-[#8C97AD]">
+                <p className="text-[11px] text-[#A6ACC0]">
                   The approved copy and attachments will be dispatched to this address.
                 </p>
               )}
@@ -207,7 +211,7 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
 
             {/* Delivery Preference Selector: Digital vs Physical */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-[#8C97AD] block">
+              <label className="text-xs font-semibold uppercase tracking-wider text-[#A6ACC0] block">
                 Delivery Format
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -216,16 +220,16 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
                   onClick={() => setCopyType("digital")}
                   className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between ${
                     copyType === "digital"
-                      ? "bg-[#16233A] border-[#EFE4CC] ring-1 ring-[#F3F5F9]/30 text-[#F3F5F9]"
-                      : "bg-[#0A1120]/60 border-[#22304A] text-[#8C97AD] hover:bg-[#16233A]/50"
+                      ? "bg-[#1C2740] border-[#E8B565] ring-1 ring-[#F5F1E8]/30 text-[#F5F1E8]"
+                      : "bg-[#0E1420]/60 border-[#2B3854] text-[#A6ACC0] hover:bg-[#1C2740]/50"
                   }`}
                   id="btn-format-digital"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-bold">Digital Copy</span>
-                    <DownloadCloud className={`w-4 h-4 ${copyType === "digital" ? "text-[#F3F5F9]" : "text-[#8C97AD]"}`} />
+                    <DownloadCloud className={`w-4 h-4 ${copyType === "digital" ? "text-[#F5F1E8]" : "text-[#A6ACC0]"}`} />
                   </div>
-                  <span className="text-[10px] text-[#8C97AD] leading-tight">
+                  <span className="text-[10px] text-[#A6ACC0] leading-tight">
                     Signed PDF delivered to app
                   </span>
                 </button>
@@ -235,16 +239,16 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
                   onClick={() => setCopyType("physical")}
                   className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between ${
                     copyType === "physical"
-                      ? "bg-[#16233A] border-[#EFE4CC] ring-1 ring-[#F3F5F9]/30 text-[#F3F5F9]"
-                      : "bg-[#0A1120]/60 border-[#22304A] text-[#8C97AD] hover:bg-[#16233A]/50"
+                      ? "bg-[#1C2740] border-[#E8B565] ring-1 ring-[#F5F1E8]/30 text-[#F5F1E8]"
+                      : "bg-[#0E1420]/60 border-[#2B3854] text-[#A6ACC0] hover:bg-[#1C2740]/50"
                   }`}
                   id="btn-format-physical"
                 >
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-bold">Physical Copy</span>
-                    <FileCheck className={`w-4 h-4 ${copyType === "physical" ? "text-[#F3F5F9]" : "text-[#8C97AD]"}`} />
+                    <FileCheck className={`w-4 h-4 ${copyType === "physical" ? "text-[#F5F1E8]" : "text-[#A6ACC0]"}`} />
                   </div>
-                  <span className="text-[10px] text-[#8C97AD] leading-tight">
+                  <span className="text-[10px] text-[#A6ACC0] leading-tight">
                     Hard copy stamped by Society Office
                   </span>
                 </button>
@@ -253,7 +257,7 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
 
             {/* Optional Note / Purpose */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-[#8C97AD] block">
+              <label className="text-xs font-semibold uppercase tracking-wider text-[#A6ACC0] block">
                 Purpose / Additional Details (Optional)
               </label>
               <textarea
@@ -261,7 +265,7 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
                 onChange={(e) => setNote(e.target.value)}
                 rows={2}
                 placeholder="e.g., Submitting to HDFC Bank for balance transfer..."
-                className="w-full bg-[#0A1120] text-[#F3F5F9] border border-[#22304A] rounded-xl px-3.5 py-2.5 text-xs placeholder:text-[#8C97AD]/50 focus:outline-none focus:border-[#EFE4CC]"
+                className="w-full bg-[#0E1420] text-[#F5F1E8] border border-[#2B3854] rounded-xl px-3.5 py-2.5 text-xs placeholder:text-[#A6ACC0]/50 focus:outline-none focus:border-[#E8B565]"
                 id="input-doc-note"
               />
             </div>
@@ -270,7 +274,7 @@ export const RequestDocumentModal: React.FC<RequestDocumentModalProps> = ({
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full bg-[#EFE4CC] hover:bg-[#F7F0DF] text-[#0A1120] font-black text-sm py-3.5 rounded-xl shadow-sm transition-all"
+                className="w-full bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] font-black text-sm py-3.5 rounded-xl shadow-sm transition-all"
                 id="btn-submit-doc-request"
               >
                 Submit Request to Society Admin

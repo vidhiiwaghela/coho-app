@@ -102,25 +102,25 @@ export async function POST(req: NextRequest) {
   <meta charset="UTF-8">
   <title>${documentTitle} - Emerald Heights CHS Ltd.</title>
 </head>
-<body style="margin:0;padding:0;background-color:#0A1120;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#F3F5F9;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0A1120;padding:36px 12px;">
+<body style="margin:0;padding:0;background-color:#0E1420;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#F5F1E8;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0E1420;padding:36px 12px;">
     <tr>
       <td align="center">
-        <table width="100%" style="max-width:580px;width:100%;background-color:#111C2E;border:1px solid #22304A;border-radius:18px;overflow:hidden;">
+        <table width="100%" style="max-width:580px;width:100%;background-color:#161F30;border:1px solid #2B3854;border-radius:18px;overflow:hidden;">
           <tr>
-            <td style="padding:28px 28px 20px 28px;background-color:#111C2E;border-bottom:1px solid #22304A;">
+            <td style="padding:28px 28px 20px 28px;background-color:#161F30;border-bottom:1px solid #2B3854;">
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td>
-                    <span style="display:inline-block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#8C97AD;">
+                    <span style="display:inline-block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#A6ACC0;">
                       CoHo Smart Portal • Official Notice
                     </span>
-                    <h1 style="margin:6px 0 0 0;font-size:21px;font-weight:800;color:#EFE4CC;letter-spacing:-0.3px;">
+                    <h1 style="margin:6px 0 0 0;font-size:21px;font-weight:800;color:#E8B565;letter-spacing:-0.3px;">
                       Emerald Heights CHS Ltd.
                     </h1>
                   </td>
                   <td align="right" valign="top">
-                    <span style="display:inline-block;padding:5px 12px;background-color:#16233A;border:1px solid rgba(79,209,161,0.3);border-radius:20px;font-size:11px;font-weight:700;color:#4FD1A1;white-space:nowrap;">
+                    <span style="display:inline-block;padding:5px 12px;background-color:#1C2740;border:1px solid rgba(79,209,161,0.3);border-radius:20px;font-size:11px;font-weight:700;color:#8FBF8A;white-space:nowrap;">
                       ✓ Fulfilled
                     </span>
                   </td>
@@ -130,35 +130,35 @@ export async function POST(req: NextRequest) {
           </tr>
           <tr>
             <td style="padding:28px;">
-              <p style="margin:0 0 14px 0;font-size:15px;line-height:1.6;color:#F3F5F9;">
+              <p style="margin:0 0 14px 0;font-size:15px;line-height:1.6;color:#F5F1E8;">
                 Dear <strong>${residentName}</strong>,
               </p>
-              <p style="margin:0 0 22px 0;font-size:14px;line-height:1.6;color:#8C97AD;">
+              <p style="margin:0 0 22px 0;font-size:14px;line-height:1.6;color:#A6ACC0;">
                 Your requested society document <strong>${documentTitle}</strong> for Flat <strong>${flatNumber}</strong> has been approved, verified, and is attached to this email.
               </p>
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#16233A;border-radius:14px;border:1px solid #22304A;margin-bottom:24px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#1C2740;border-radius:14px;border:1px solid #2B3854;margin-bottom:24px;">
                 <tr>
                   <td style="padding:18px 20px;">
-                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#8C97AD;">Document Issued</div>
-                    <div style="font-size:16px;font-weight:800;color:#EFE4CC;margin-top:2px;">${documentTitle}</div>
-                    <div style="font-size:12px;color:#8C97AD;margin-top:6px;">Unit: Flat ${flatNumber} • Recipient: ${toEmail} • Issued: ${issueDate}</div>
-                    ${fileName ? `<div style="font-size:13px;color:#F3F5F9;margin-top:8px;">📎 <strong>${fileName}</strong> attached</div>` : ""}
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#A6ACC0;">Document Issued</div>
+                    <div style="font-size:16px;font-weight:800;color:#E8B565;margin-top:2px;">${documentTitle}</div>
+                    <div style="font-size:12px;color:#A6ACC0;margin-top:6px;">Unit: Flat ${flatNumber} • Recipient: ${toEmail} • Issued: ${issueDate}</div>
+                    ${fileName ? `<div style="font-size:13px;color:#F5F1E8;margin-top:8px;">📎 <strong>${fileName}</strong> attached</div>` : ""}
                   </td>
                 </tr>
               </table>
-              <div style="background-color:rgba(10,17,32,0.7);border-left:4px solid #EFE4CC;border-radius:8px;padding:12px 16px;margin-bottom:20px;">
-                <p style="margin:0;font-size:13px;color:#F3F5F9;">
+              <div style="background-color:rgba(10,17,32,0.7);border-left:4px solid #E8B565;border-radius:8px;padding:12px 16px;margin-bottom:20px;">
+                <p style="margin:0;font-size:13px;color:#F5F1E8;">
                   <strong>Official Verification:</strong> This digital copy contains the verified society reference seal. You may print or forward this file for banking, registration, or municipal procedures.
                 </p>
               </div>
-              <p style="margin:0;font-size:13px;line-height:1.6;color:#8C97AD;">
+              <p style="margin:0;font-size:13px;line-height:1.6;color:#A6ACC0;">
                 If you have any questions or require an additional stamped hardcopy, please contact the Society Office or reach out to the Secretary via the CoHo Helpdesk.
               </p>
             </td>
           </tr>
           <tr>
-            <td style="padding:18px 28px;background-color:#0A1120;border-top:1px solid #22304A;text-align:center;">
-              <p style="margin:0;font-size:11px;color:#8C97AD;">
+            <td style="padding:18px 28px;background-color:#0E1420;border-top:1px solid #2B3854;text-align:center;">
+              <p style="margin:0;font-size:11px;color:#A6ACC0;">
                 Emerald Heights CHS Ltd. • Seawoods, Navi Mumbai 400706
               </p>
             </td>

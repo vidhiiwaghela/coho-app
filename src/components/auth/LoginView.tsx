@@ -60,11 +60,23 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-[#0A1120] flex flex-col items-center justify-center p-4 sm:p-6 text-[#F3F5F9] relative overflow-hidden">
+    <div className="min-h-screen w-full bg-[#0E1420] flex flex-col items-center justify-center p-4 sm:p-6 text-[#F5F1E8] relative overflow-hidden">
+      {/* Atmospheric aurora glows */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-24 -left-16 w-72 h-72 rounded-full blur-3xl"
+        style={{ background: "radial-gradient(circle, rgba(232,181,101,0.16), transparent 70%)" }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-24 -right-16 w-80 h-80 rounded-full blur-3xl"
+        style={{ background: "radial-gradient(circle, rgba(127,170,209,0.12), transparent 70%)" }}
+      />
+
       <div className="w-full max-w-sm relative z-10 space-y-6">
         {/* Society Branding Header */}
         <div className="text-center space-y-2.5">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-[#111C2E] border border-[#22304A] p-2 flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-[#161F30] border border-[#2B3854] p-2 flex items-center justify-center accent-glow">
             <img
               src="/coho_logo.jpeg"
               alt="CoHo Logo"
@@ -75,19 +87,24 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
             />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-black text-[#F3F5F9] tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-black text-[#F5F1E8] tracking-tight">
               Emerald Heights CHS
             </h1>
-            <p className="text-xs text-[#8C97AD] font-medium">
+            <p className="text-xs text-[#A6ACC0] font-medium">
               CoHo Smart Resident Portal
             </p>
           </div>
         </div>
 
         {/* Clean Auth Card */}
-        <div className="bg-[#111C2E] border border-[#22304A] rounded-2xl p-6 shadow-sm space-y-5">
+        <div className="card-elevated relative overflow-hidden bg-gradient-to-br from-[#1B2740] via-[#161F30] to-[#111827] border border-[#2B3854] rounded-3xl p-6 space-y-5">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 top-0 h-px"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent)" }}
+          />
           {/* Toggle: Resident or Admin */}
-          <div className="grid grid-cols-2 gap-1 bg-[#0A1120] p-1 rounded-xl border border-[#22304A]">
+          <div className="grid grid-cols-2 gap-1 bg-[#0E1420] p-1 rounded-xl border border-[#2B3854]">
             <button
               type="button"
               onClick={() => {
@@ -96,8 +113,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
               }}
               className={`py-2 px-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                 loginMode === "resident"
-                  ? "bg-[#EFE4CC] text-[#0A1120] font-bold shadow-sm"
-                  : "text-[#8C97AD] hover:text-[#F3F5F9]"
+                  ? "bg-[#E8B565] text-[#0E1420] font-bold shadow-sm"
+                  : "text-[#A6ACC0] hover:text-[#F5F1E8]"
               }`}
               id="tab-resident"
             >
@@ -113,8 +130,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
               }}
               className={`py-2 px-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
                 loginMode === "admin"
-                  ? "bg-[#EFE4CC] text-[#0A1120] font-bold shadow-sm"
-                  : "text-[#8C97AD] hover:text-[#F3F5F9]"
+                  ? "bg-[#E8B565] text-[#0E1420] font-bold shadow-sm"
+                  : "text-[#A6ACC0] hover:text-[#F5F1E8]"
               }`}
               id="tab-admin"
             >
@@ -124,7 +141,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
           </div>
 
           {errorMsg && (
-            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[#2A1418] border border-[#F0736A]/30 text-[#F0736A] text-xs animate-shake">
+            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[#2A1418] border border-[#E2685B]/30 text-[#E2685B] text-xs animate-shake">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
@@ -135,28 +152,28 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
             <form onSubmit={handleResidentSubmit} className="space-y-4">
               {/* Society Flat Selector */}
               <div>
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C97AD] block mb-1.5">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#A6ACC0] block mb-1.5">
                   Flat Number
                 </label>
                 <div className="relative">
                   <select
                     value={selectedFlatId}
                     onChange={(e) => setSelectedFlatId(e.target.value)}
-                    className="w-full bg-[#0A1120] border border-[#22304A] rounded-xl px-3 py-2.5 text-xs text-[#F3F5F9] appearance-none focus:outline-none focus:border-[#EFE4CC] cursor-pointer"
+                    className="w-full bg-[#0E1420] border border-[#2B3854] rounded-xl px-3 py-2.5 text-xs text-[#F5F1E8] appearance-none focus:outline-none focus:border-[#E8B565] cursor-pointer"
                     id="select-flat-number"
                   >
                     {wings.map((wing) => {
                       const wingFlats = residentFlats.filter((f) => f.flatNumber.startsWith(wing.prefix));
                       if (wingFlats.length === 0) return null;
                       return (
-                        <optgroup key={wing.name} label={wing.name} className="bg-[#111C2E] text-[#8C97AD]">
+                        <optgroup key={wing.name} label={wing.name} className="bg-[#161F30] text-[#A6ACC0]">
                           {wingFlats.map((flat) => {
                             const roleTag = flat.flatNumber === "B-402" ? "(Secretary / Owner)" : "(Owner)";
                             return (
                               <option
                                 key={flat.id}
                                 value={flat.id}
-                                className="bg-[#0A1120] text-[#F3F5F9]"
+                                className="bg-[#0E1420] text-[#F5F1E8]"
                               >
                                 Flat {flat.flatNumber} — {flat.residentName} {roleTag}
                               </option>
@@ -166,13 +183,13 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
                       );
                     })}
                   </select>
-                  <ChevronDown className="w-4 h-4 text-[#8C97AD] absolute right-3 top-3 pointer-events-none" />
+                  <ChevronDown className="w-4 h-4 text-[#A6ACC0] absolute right-3 top-3 pointer-events-none" />
                 </div>
               </div>
 
               {/* Role Toggle: Owner vs Tenant */}
               <div>
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C97AD] block mb-1.5">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#A6ACC0] block mb-1.5">
                   Occupancy Role
                 </label>
                 <div className="grid grid-cols-2 gap-2">
@@ -181,8 +198,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
                     onClick={() => setSelectedRole("resident")}
                     className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all text-center ${
                       selectedRole === "resident"
-                        ? "bg-[#16233A] border-[#EFE4CC] text-[#F3F5F9] shadow-sm"
-                        : "bg-[#0A1120]/60 border-[#22304A] text-[#8C97AD] hover:text-[#F3F5F9]"
+                        ? "bg-[#1C2740] border-[#E8B565] text-[#F5F1E8] shadow-sm"
+                        : "bg-[#0E1420]/60 border-[#2B3854] text-[#A6ACC0] hover:text-[#F5F1E8]"
                     }`}
                   >
                     Owner / Member
@@ -192,8 +209,8 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
                     onClick={() => setSelectedRole("tenant")}
                     className={`py-2 px-3 rounded-xl border text-xs font-bold transition-all text-center ${
                       selectedRole === "tenant"
-                        ? "bg-[#16233A] border-[#EFE4CC] text-[#F3F5F9] shadow-sm"
-                        : "bg-[#0A1120]/60 border-[#22304A] text-[#8C97AD] hover:text-[#F3F5F9]"
+                        ? "bg-[#1C2740] border-[#E8B565] text-[#F5F1E8] shadow-sm"
+                        : "bg-[#0E1420]/60 border-[#2B3854] text-[#A6ACC0] hover:text-[#F5F1E8]"
                     }`}
                   >
                     Tenant
@@ -203,7 +220,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
 
               {/* Password / PIN Input - Empty by default with placeholder */}
               <div>
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C97AD] block mb-1.5">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#A6ACC0] block mb-1.5">
                   Passcode / PIN
                 </label>
                 <div className="relative">
@@ -217,17 +234,17 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
                       if (errorMsg) setErrorMsg("");
                     }}
                     placeholder="Enter 4-digit PIN"
-                    className="w-full bg-[#0A1120] border border-[#22304A] rounded-xl px-3 py-2.5 text-xs text-[#F3F5F9] focus:outline-none focus:border-[#EFE4CC]"
+                    className="w-full bg-[#0E1420] border border-[#2B3854] rounded-xl px-3 py-2.5 text-xs text-[#F5F1E8] focus:outline-none focus:border-[#E8B565]"
                     id="input-pin-resident"
                   />
-                  <Lock className="w-3.5 h-3.5 text-[#8C97AD] absolute right-3 top-3 pointer-events-none" />
+                  <Lock className="w-3.5 h-3.5 text-[#A6ACC0] absolute right-3 top-3 pointer-events-none" />
                 </div>
               </div>
 
               {/* Prominent Sign In Button */}
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl bg-[#EFE4CC] hover:bg-[#F7F0DF] text-[#0A1120] font-extrabold text-xs shadow-sm transition-all flex items-center justify-center gap-2 pt-2.5"
+                className="w-full py-3 rounded-xl bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] font-extrabold text-xs shadow-sm transition-all flex items-center justify-center gap-2 pt-2.5"
                 id="btn-resident-signin"
               >
                 <span>Sign In as Resident</span>
@@ -238,19 +255,19 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
             /* Admin Login Form */
             <form onSubmit={handleAdminSubmit} className="space-y-4">
               <div>
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C97AD] block mb-1.5">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#A6ACC0] block mb-1.5">
                   Committee Email / Admin ID
                 </label>
                 <input
                   type="email"
                   value={adminEmail}
                   onChange={(e) => setAdminEmail(e.target.value)}
-                  className="w-full bg-[#0A1120] border border-[#22304A] rounded-xl px-3 py-2.5 text-xs text-[#F3F5F9] focus:outline-none focus:border-[#EFE4CC]"
+                  className="w-full bg-[#0E1420] border border-[#2B3854] rounded-xl px-3 py-2.5 text-xs text-[#F5F1E8] focus:outline-none focus:border-[#E8B565]"
                 />
               </div>
 
               <div>
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#8C97AD] block mb-1.5">
+                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#A6ACC0] block mb-1.5">
                   Admin Passcode / Security PIN
                 </label>
                 <div className="relative">
@@ -264,16 +281,16 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
                       if (errorMsg) setErrorMsg("");
                     }}
                     placeholder="Enter 4-digit PIN"
-                    className="w-full bg-[#0A1120] border border-[#22304A] rounded-xl px-3 py-2.5 text-xs text-[#F3F5F9] focus:outline-none focus:border-[#EFE4CC]"
+                    className="w-full bg-[#0E1420] border border-[#2B3854] rounded-xl px-3 py-2.5 text-xs text-[#F5F1E8] focus:outline-none focus:border-[#E8B565]"
                     id="input-pin-admin"
                   />
-                  <KeyRound className="w-3.5 h-3.5 text-[#8C97AD] absolute right-3 top-3 pointer-events-none" />
+                  <KeyRound className="w-3.5 h-3.5 text-[#A6ACC0] absolute right-3 top-3 pointer-events-none" />
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3 rounded-xl bg-[#EFE4CC] hover:bg-[#F7F0DF] text-[#0A1120] font-extrabold text-xs shadow-sm transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-xl bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] font-extrabold text-xs shadow-sm transition-all flex items-center justify-center gap-2"
                 id="btn-admin-signin"
               >
                 <span>Sign In as Managing Committee</span>
@@ -288,13 +305,13 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
           <button
             type="button"
             onClick={() => setShowDemoAutofill(!showDemoAutofill)}
-            className="text-[11px] text-[#8C97AD]/70 hover:text-[#F3F5F9] underline decoration-dotted transition-colors"
+            className="text-[11px] text-[#A6ACC0]/70 hover:text-[#F5F1E8] underline decoration-dotted transition-colors"
           >
             Demo Autofill
           </button>
 
           {showDemoAutofill && (
-            <div className="bg-[#111C2E] border border-[#22304A] p-2.5 rounded-xl shadow-sm flex flex-wrap items-center justify-center gap-2 animate-fade-in">
+            <div className="bg-[#161F30] border border-[#2B3854] p-2.5 rounded-xl shadow-sm flex flex-wrap items-center justify-center gap-2 animate-fade-in">
               <button
                 type="button"
                 onClick={() => {
@@ -303,7 +320,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
                   setPassword("1234");
                   onLogin("flat-a101", "resident");
                 }}
-                className="px-2.5 py-1 text-[10px] font-bold bg-[#16233A] hover:bg-[#8C97AD]/10 text-[#F3F5F9] rounded-lg border border-[#EFE4CC]/30"
+                className="px-2.5 py-1 text-[10px] font-bold bg-[#1C2740] hover:bg-[#A6ACC0]/10 text-[#F5F1E8] rounded-lg border border-[#E8B565]/30"
               >
                 Pooja (A-101)
               </button>
@@ -315,7 +332,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
                   setPassword("1234");
                   onLogin("flat-b402", "resident");
                 }}
-                className="px-2.5 py-1 text-[10px] font-bold bg-[#16233A] hover:bg-[#8C97AD]/10 text-[#F3F5F9] rounded-lg border border-[#EFE4CC]/30"
+                className="px-2.5 py-1 text-[10px] font-bold bg-[#1C2740] hover:bg-[#A6ACC0]/10 text-[#F5F1E8] rounded-lg border border-[#E8B565]/30"
               >
                 Rajesh (B-402)
               </button>
@@ -327,7 +344,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
                   setPassword("1234");
                   onLogin("flat-b204", "resident");
                 }}
-                className="px-2.5 py-1 text-[10px] font-bold bg-[#16233A] hover:bg-[#8C97AD]/10 text-[#F3F5F9] rounded-lg border border-[#EFE4CC]/30"
+                className="px-2.5 py-1 text-[10px] font-bold bg-[#1C2740] hover:bg-[#A6ACC0]/10 text-[#F5F1E8] rounded-lg border border-[#E8B565]/30"
               >
                 Ananya (B-204)
               </button>
@@ -339,7 +356,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
                   setPassword("1234");
                   onLogin("flat-c303", "resident");
                 }}
-                className="px-2.5 py-1 text-[10px] font-bold bg-[#16233A] hover:bg-[#8C97AD]/10 text-[#F3F5F9] rounded-lg border border-[#EFE4CC]/30"
+                className="px-2.5 py-1 text-[10px] font-bold bg-[#1C2740] hover:bg-[#A6ACC0]/10 text-[#F5F1E8] rounded-lg border border-[#E8B565]/30"
               >
                 Vikram (C-303)
               </button>
@@ -349,7 +366,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ flats, onLogin }) => {
                   setAdminPin("1234");
                   onLogin(adminFlat.id, "admin");
                 }}
-                className="px-2.5 py-1 text-[10px] font-bold bg-[#16233A] hover:bg-[#8C97AD]/10 text-[#F3F5F9] rounded-lg border border-[#EFE4CC]/30"
+                className="px-2.5 py-1 text-[10px] font-bold bg-[#1C2740] hover:bg-[#A6ACC0]/10 text-[#F5F1E8] rounded-lg border border-[#E8B565]/30"
               >
                 Admin (Secretary)
               </button>

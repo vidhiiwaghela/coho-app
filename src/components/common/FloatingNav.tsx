@@ -43,7 +43,13 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({
   return (
     <div className="fixed bottom-5 inset-x-0 z-40 flex justify-center px-4 pointer-events-none">
       <nav
-        className="pointer-events-auto bg-[var(--card)] border border-[var(--border)] p-1.5 rounded-2xl flex items-center gap-1.5 max-w-full overflow-x-auto no-scrollbar transition-all"
+        className="pointer-events-auto border border-[var(--border)] p-1.5 rounded-2xl flex items-center gap-1.5 max-w-full overflow-x-auto no-scrollbar transition-all"
+        style={{
+          background: "rgba(22, 31, 48, 0.82)",
+          backdropFilter: "blur(18px) saturate(1.3)",
+          WebkitBackdropFilter: "blur(18px) saturate(1.3)",
+          boxShadow: "0 20px 44px -18px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.06)",
+        }}
         aria-label="Main Navigation"
       >
         {navItems.map((item) => {
@@ -56,9 +62,9 @@ export const FloatingNav: React.FC<FloatingNavProps> = ({
             <button
               key={item.id}
               onClick={() => onChangeTab(item.id)}
-              className={`relative flex flex-col items-center justify-center px-3.5 py-2.5 rounded-xl transition-all duration-200 group ${
+              className={`tap-scale relative flex flex-col items-center justify-center px-3.5 py-2.5 rounded-xl transition-all duration-200 group ${
                 isActive
-                  ? "bg-[var(--surface)] text-[var(--accent)] font-bold"
+                  ? "bg-[var(--surface)] text-[var(--accent)] font-bold ring-1 ring-[#E8B565]/25 shadow-[0_0_22px_-6px_rgba(232,181,101,0.55)]"
                   : "text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--surface)]/50"
               }`}
               title={item.label}

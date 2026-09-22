@@ -28,10 +28,14 @@ import {
   INITIAL_MEETINGS,
   INITIAL_SPONSORSHIPS,
   INITIAL_NOTIFICATIONS,
+  PROPERTY_TAX_CONFIG,
+  INITIAL_PROPERTY_TAXES,
 } from "./mockData";
+import { DEFAULT_UNAVAILABLE_DOC_MESSAGE } from "./constants";
+import { FlatPropertyTax } from "../types";
 import { supabase, isSupabaseConfigured } from "./supabaseClient";
 
-const STORAGE_KEY = "coho_rwa_app_state_v1";
+const STORAGE_KEY = "coho_rwa_app_state_v2";
 
 interface AppState {
   isAuthenticated: boolean;
@@ -47,6 +51,7 @@ interface AppState {
   meetings: MeetingRecord[];
   sponsorships: SponsorshipCampaign[];
   notifications: Notification[];
+  propertyTaxes: FlatPropertyTax[];
   activeTab: ActiveTab;
 }
 
@@ -64,6 +69,7 @@ const defaultState: AppState = {
   meetings: INITIAL_MEETINGS,
   sponsorships: INITIAL_SPONSORSHIPS,
   notifications: INITIAL_NOTIFICATIONS,
+  propertyTaxes: INITIAL_PROPERTY_TAXES,
   activeTab: "home",
 };
 
@@ -74,6 +80,11 @@ export function useCohoStore() {
   // Initialize from Supabase if configured, otherwise localStorage
   useEffect(() => {
     async function loadData() {
+      // Clear legacy storage key if present
+      try {
+        localStorage.removeItem("coho_rwa_app_state_v1");
+      } catch (_) {}
+
       if (isSupabaseConfigured && supabase) {
         try {
           const [noticesRes, rulesRes, docsRes, meetingsRes, sponsorshipsRes, billsRes, flatsRes] = await Promise.all([
@@ -87,13 +98,149 @@ export function useCohoStore() {
           ]);
 
           const loadedData: Partial<AppState> = {};
-          if (noticesRes.data && noticesRes.data.length > 0) loadedData.notices = noticesRes.data as any;
-          if (rulesRes.data && rulesRes.data.length > 0) loadedData.rules = rulesRes.data as any;
-          if (docsRes.data && docsRes.data.length > 0) loadedData.documents = docsRes.data as any;
-          if (meetingsRes.data && meetingsRes.data.length > 0) loadedData.meetings = meetingsRes.data as any;
-          if (sponsorshipsRes.data && sponsorshipsRes.data.length > 0) loadedData.sponsorships = sponsorshipsRes.data as any;
-          if (billsRes.data && billsRes.data.length > 0) loadedData.bills = billsRes.data as any;
-          if (flatsRes.data && flatsRes.data.length > 0) loadedData.flats = flatsRes.data as any;
+
+          if (flatsRes.data && flatsRes.data.length > 0) {
+            loadedData.flats = flatsRes.data.map((f: any) => ({
+              id: f.id,
+              flatNumber: f.flat_number || f.flatNumber,
+              wing: f.wing,
+              buildingName: f.building_name || f.buildingName,
+              residentName: f.resident_name || f.residentName,
+              email: f.email,
+              phone: f.phone,
+              role: f.role,
+              isOwner: f.is_owner !== undefined ? f.is_owner : f.isOwner,
+              possessionDate: f.possession_date || f.possessionDate,
+              parkingSlot: f.parking_slot || f.parkingSlot,
+              pin: f.pin || "1234",
+            }));
+          }
+
+          if (billsRes.data && billsRes.data.length > 0) {
+            loadedData.bills = billsRes.data.map((b: any) => ({
+              id: b.id,
+              flatId: b.flat_id || b.flatId,
+              flatNumber: b.flat_number || b.flatNumber,
+              monthYear: b.month_year || b.monthYear,
+              billingDate: b.billing_date || b.billingDate,
+              dueDate: b.due_date || b.dueDate,
+              items: b.items || [],
+              totalAmount: b.total_amount !== undefined ? b.total_amount : b.totalAmount,
+              status: b.status,
+              paidAt: b.paid_at || b.paidAt,
+              paymentRef: b.payment_ref || b.paymentRef,
+              paymentMethod: b.payment_method || b.paymentMethod,
+              isPropertyTaxIncluded: b.is_property_tax_included !== undefined ? b.is_property_tax_included : b.isPropertyTaxIncluded,
+              propertyTaxAmount: b.property_tax_amount !== undefined ? b.property_tax_amount : b.propertyTaxAmount,
+            }));
+          }
+
+          if (sponsorshipsRes.data && sponsorshipsRes.data.length > 0) {
+            loadedData.sponsorships = sponsorshipsRes.data.map((s: any) => ({
+              id: s.id,
+              title: s.title,
+              description: s.description,
+              festivalDate: s.festival_date || s.festivalDate,
+              targetAmount: s.target_amount !== undefined ? s.target_amount : s.targetAmount,
+              collectedAmount: s.collected_amount !== undefined ? s.collected_amount : s.collectedAmount,
+              bannerImage: s.banner_image || s.bannerImage,
+              tiers: s.tiers || [],
+              donations: s.donations || [],
+            }));
+          }
+
+          if (docsRes.data && docsRes.data.length > 0) {
+            loadedData.documents = docsRes.data.map((d: any) => ({
+              id: d.id,
+              flatId: d.flat_id || d.flatId,
+              title: d.title,
+              category: d.category,
+              fileUrl: d.file_url || d.fileUrl,
+              fileSize: d.file_size || d.fileSize,
+              fileType: d.file_type || d.fileType,
+              uploadedAt: d.uploaded_at || d.uploadedAt,
+              uploadedBy: d.uploaded_by || d.uploadedBy,
+              isSocietyWide: d.is_society_wide !== undefined ? d.is_society_wide : d.isSocietyWide,
+            }));
+          }
+
+          if (rulesRes.data && rulesRes.data.length > 0) {
+            loadedData.rules = rulesRes.data.map((r: any) => ({
+              id: r.id,
+              title: r.title,
+              description: r.description,
+              category: r.category,
+              penaltyInfo: r.penalty_info || r.penaltyInfo,
+              originMeeting: r.origin_meeting || r.originMeeting,
+              effectiveDate: r.effective_date || r.effectiveDate,
+              lastUpdated: r.last_updated || r.lastUpdated,
+              version: r.version,
+            }));
+          }
+
+          if (noticesRes.data && noticesRes.data.length > 0) {
+            loadedData.notices = noticesRes.data as any;
+          }
+
+          if (meetingsRes.data && meetingsRes.data.length > 0) {
+            loadedData.meetings = meetingsRes.data.map((m: any) => ({
+              id: m.id,
+              title: m.title,
+              date: m.date,
+              time: m.time,
+              venue: m.venue,
+              agenda: m.agenda || [],
+              attendeeCount: m.attendee_count !== undefined ? m.attendee_count : m.attendeeCount,
+              minutesContent: m.minutes_content || m.minutesContent,
+              minutes_text: m.minutes_text || m.minutesText,
+              summary_text: m.summary_text || m.summaryText,
+              summary_status: m.summary_status || m.summaryStatus,
+              aiSummary: m.ai_summary || m.aiSummary || {},
+              attachments: m.attachments || [],
+            }));
+          }
+
+          // Optional tables: document_requests & facility_bookings
+          try {
+            const [docReqsRes, facilityRes] = await Promise.all([
+              supabase.from("document_requests").select("*").order("created_at", { ascending: false }),
+              supabase.from("facility_bookings").select("*").order("created_at", { ascending: false }),
+            ]);
+            if (docReqsRes.data && docReqsRes.data.length > 0) {
+              loadedData.documentRequests = docReqsRes.data.map((r: any) => ({
+                id: r.id,
+                flatId: r.flat_id || r.flatId,
+                flatNumber: r.flat_number || r.flatNumber,
+                residentName: r.resident_name || r.residentName,
+                deliveryEmail: r.delivery_email || r.deliveryEmail,
+                documentType: r.document_type || r.documentType,
+                documentName: r.document_name || r.documentName,
+                copyType: r.copy_type || r.copyType,
+                status: r.status === "not_available" ? "unavailable" : r.status,
+                requestedAt: r.requested_at || r.requestedAt,
+                fulfilledAt: r.fulfilled_at || r.fulfilledAt,
+                fulfilledFileName: r.fulfilled_file_name || r.fulfilledFileName,
+                note: r.note,
+                notAvailableReason: r.not_available_reason || r.notAvailableReason,
+              }));
+            }
+            if (facilityRes.data && facilityRes.data.length > 0) {
+              loadedData.facilityBookings = facilityRes.data.map((b: any) => ({
+                id: b.id,
+                flatId: b.flat_id || b.flatId,
+                flatNumber: b.flat_number || b.flatNumber,
+                residentName: b.resident_name || b.residentName,
+                facility: b.facility,
+                date: b.date,
+                timeSlot: b.time_slot || b.timeSlot,
+                purpose: b.purpose,
+                status: b.status,
+                createdAt: b.created_at || b.createdAt,
+                approvedAt: b.approved_at || b.approvedAt,
+                adminNotes: b.admin_notes || b.adminNotes,
+              }));
+            }
+          } catch (_) {}
 
           if (Object.keys(loadedData).length > 0) {
             setState((prev) => ({ ...prev, ...loadedData }));
@@ -122,7 +269,8 @@ export function useCohoStore() {
               };
             });
           }
-          // Strictly synchronize flats to the 4 resident flats + admin from INITIAL_FLATS
+
+          // Strictly synchronize flats to the 5 resident flats + admin from INITIAL_FLATS
           parsed.flats = INITIAL_FLATS.map((init) => {
             const existing = Array.isArray(parsed.flats)
               ? parsed.flats.find((f: FlatUser) => f.id === init.id)
@@ -135,6 +283,31 @@ export function useCohoStore() {
                 }
               : init;
           });
+
+          // Ensure document requests map not_available to unavailable
+          if (parsed.documentRequests && Array.isArray(parsed.documentRequests)) {
+            parsed.documentRequests = parsed.documentRequests.map((r: DocumentRequest) => ({
+              ...r,
+              status: r.status === "not_available" ? "unavailable" : r.status,
+              notAvailableReason: (r.status === "unavailable" || (r as any).status === "not_available") && !r.notAvailableReason
+                ? DEFAULT_UNAVAILABLE_DOC_MESSAGE
+                : r.notAvailableReason,
+            }));
+          }
+
+          // If stale Ganesh campaign exists, reset sponsorships to INITIAL_SPONSORSHIPS
+          if (
+            !parsed.sponsorships ||
+            !Array.isArray(parsed.sponsorships) ||
+            parsed.sponsorships.some((c: any) => c.id === "camp-ganesh-2026")
+          ) {
+            parsed.sponsorships = INITIAL_SPONSORSHIPS;
+          }
+
+          // Ensure property taxes exist for all 5 flats
+          if (!parsed.propertyTaxes || !Array.isArray(parsed.propertyTaxes) || parsed.propertyTaxes.length < 5) {
+            parsed.propertyTaxes = INITIAL_PROPERTY_TAXES;
+          }
 
           // Ensure currentFlatId points to a valid flat
           if (!INITIAL_FLATS.some((f) => f.id === parsed.currentFlatId)) {
@@ -219,6 +392,30 @@ export function useCohoStore() {
       ...prev,
       documentRequests: [newReq, ...(prev.documentRequests || [])],
     }));
+
+    if (isSupabaseConfigured && supabase) {
+      (async () => {
+        try {
+          await supabase.from("document_requests").insert([
+            {
+              id: newReq.id,
+              flat_id: newReq.flatId,
+              flat_number: newReq.flatNumber,
+              resident_name: newReq.residentName,
+              delivery_email: newReq.deliveryEmail,
+              document_type: newReq.documentType,
+              document_name: newReq.documentName,
+              copy_type: newReq.copyType,
+              status: newReq.status,
+              requested_at: newReq.requestedAt,
+              note: newReq.note || null,
+            },
+          ]);
+        } catch (e) {
+          console.warn("Supabase document_requests insert error:", e);
+        }
+      })();
+    }
   };
 
   const fulfillDocumentRequest = (requestId: string, fileName?: string) => {
@@ -241,6 +438,55 @@ export function useCohoStore() {
           : r
       ),
     }));
+
+    if (isSupabaseConfigured && supabase) {
+      (async () => {
+        try {
+          await supabase
+            .from("document_requests")
+            .update({
+              status: "fulfilled",
+              fulfilled_at: formatted,
+              fulfilled_file_name: fileName || null,
+            })
+            .eq("id", requestId);
+        } catch (e) {
+          console.warn("Supabase document_requests update error:", e);
+        }
+      })();
+    }
+  };
+
+  const markDocumentNotAvailable = (requestId: string, reason?: string) => {
+    const finalReason = reason?.trim() || DEFAULT_UNAVAILABLE_DOC_MESSAGE;
+    updateState((prev) => ({
+      ...prev,
+      documentRequests: (prev.documentRequests || []).map((r) =>
+        r.id === requestId
+          ? {
+              ...r,
+              status: "unavailable",
+              notAvailableReason: finalReason,
+            }
+          : r
+      ),
+    }));
+
+    if (isSupabaseConfigured && supabase) {
+      (async () => {
+        try {
+          await supabase
+            .from("document_requests")
+            .update({
+              status: "unavailable",
+              not_available_reason: finalReason,
+            })
+            .eq("id", requestId);
+        } catch (e) {
+          console.warn("Supabase document_requests update error:", e);
+        }
+      })();
+    }
   };
 
   const lodgeComplaint = (complaint: Omit<ComplaintTicket, "id" | "createdAt" | "status">) => {
@@ -309,6 +555,29 @@ export function useCohoStore() {
       ...prev,
       facilityBookings: [newBooking, ...(prev.facilityBookings || [])],
     }));
+
+    if (isSupabaseConfigured && supabase) {
+      (async () => {
+        try {
+          await supabase.from("facility_bookings").insert([
+            {
+              id: newBooking.id,
+              flat_id: newBooking.flatId,
+              flat_number: newBooking.flatNumber,
+              resident_name: newBooking.residentName,
+              facility: newBooking.facility,
+              date: newBooking.date,
+              time_slot: newBooking.timeSlot,
+              purpose: newBooking.purpose,
+              status: newBooking.status,
+              created_at: newBooking.createdAt,
+            },
+          ]);
+        } catch (e) {
+          console.warn("Supabase facility_bookings insert error:", e);
+        }
+      })();
+    }
   };
 
   const updateFacilityBookingStatus = (
@@ -335,6 +604,23 @@ export function useCohoStore() {
           : b
       ),
     }));
+
+    if (isSupabaseConfigured && supabase) {
+      (async () => {
+        try {
+          await supabase
+            .from("facility_bookings")
+            .update({
+              status,
+              approved_at: formatted,
+              ...(adminNotes ? { admin_notes: adminNotes } : {}),
+            })
+            .eq("id", bookingId);
+        } catch (e) {
+          console.warn("Supabase facility_bookings update error:", e);
+        }
+      })();
+    }
   };
 
   const sendPaymentReminder = (flatNumber: string, amount: number, month: string) => {
@@ -713,7 +999,6 @@ export function useCohoStore() {
       flatNumber: string;
       amount: number;
       tierName?: string;
-      message?: string;
       paymentRef?: string;
       paymentMethod?: string;
     }
@@ -807,8 +1092,62 @@ export function useCohoStore() {
   };
 
   const resetToDefault = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem("coho_rwa_app_state_v1");
+    } catch (_) {}
     setState(defaultState);
+  };
+
+  const updatePropertyTax = (
+    flatId: string,
+    updates: Partial<FlatPropertyTax>
+  ) => {
+    updateState((prev) => {
+      const currentList = prev.propertyTaxes && prev.propertyTaxes.length > 0
+        ? prev.propertyTaxes
+        : INITIAL_PROPERTY_TAXES;
+
+      const updatedTaxes = currentList.map((item) => {
+        if (item.flatId !== flatId && item.flatNumber !== flatId) return item;
+
+        let newAnnualAmount = item.annualTaxAmount;
+        if (updates.propertyType && updates.propertyType !== item.propertyType) {
+          newAnnualAmount =
+            PROPERTY_TAX_CONFIG[updates.propertyType]?.annualAmount ||
+            item.annualTaxAmount;
+        } else if (updates.annualTaxAmount !== undefined) {
+          newAnnualAmount = updates.annualTaxAmount;
+        }
+
+        const newStatus =
+          updates.status !== undefined ? updates.status : item.status;
+        const now = new Date().toLocaleDateString("en-IN", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+
+        return {
+          ...item,
+          ...updates,
+          annualTaxAmount: newAnnualAmount,
+          status: newStatus,
+          lastPaidDate:
+            newStatus === "paid"
+              ? updates.lastPaidDate || item.lastPaidDate || now
+              : undefined,
+          paymentRef:
+            newStatus === "paid"
+              ? updates.paymentRef ||
+                item.paymentRef ||
+                `MUM/TAX/2026/${Math.floor(100000 + Math.random() * 900000)}`
+              : undefined,
+        };
+      });
+
+      return { ...prev, propertyTaxes: updatedTaxes };
+    });
   };
 
   return {
@@ -820,6 +1159,7 @@ export function useCohoStore() {
     logout,
     requestDocument,
     fulfillDocumentRequest,
+    markDocumentNotAvailable,
     lodgeComplaint,
     updateComplaintStatus,
     bookFacility,
@@ -836,6 +1176,7 @@ export function useCohoStore() {
     addCampaign,
     sendPaymentReminder,
     markNotificationAsRead,
+    updatePropertyTax,
     resetToDefault,
   };
 }

@@ -16,7 +16,6 @@ import {
   Gift,
   QrCode,
   X,
-  MessageSquareQuote,
   Plus,
   AlertCircle,
   CreditCard,
@@ -31,18 +30,18 @@ import {
 import { openRazorpayCheckout } from "../../lib/razorpay";
 
 const getTierBadgeStyle = (tierName?: string) => {
-  if (!tierName) return { color: "#EFE4CC", bg: "bg-[#16233A]", border: "border-[#22304A]" };
+  if (!tierName) return { color: "#E8B565", bg: "bg-[#1C2740]", border: "border-[#2B3854]" };
   const lower = tierName.toLowerCase();
   if (lower.includes("gold")) {
-    return { color: "#F2C14E", bg: "bg-[#16233A]", border: "border-[#F2C14E]/30" };
+    return { color: "#D9B872", bg: "bg-[#1C2740]", border: "border-[#D9B872]/30" };
   }
   if (lower.includes("silver")) {
-    return { color: "#B9C2D0", bg: "bg-[#16233A]", border: "border-[#B9C2D0]/30" };
+    return { color: "#BEC3CC", bg: "bg-[#1C2740]", border: "border-[#BEC3CC]/30" };
   }
   if (lower.includes("bronze")) {
-    return { color: "#C98A5A", bg: "bg-[#16233A]", border: "border-[#C98A5A]/30" };
+    return { color: "#C4895A", bg: "bg-[#1C2740]", border: "border-[#C4895A]/30" };
   }
-  return { color: "#EFE4CC", bg: "bg-[#16233A]", border: "border-[#22304A]" };
+  return { color: "#E8B565", bg: "bg-[#1C2740]", border: "border-[#2B3854]" };
 };
 
 interface SponsorshipViewProps {
@@ -55,7 +54,6 @@ interface SponsorshipViewProps {
       flatNumber: string;
       amount: number;
       tierName?: string;
-      message?: string;
       paymentRef?: string;
       paymentMethod?: string;
     }
@@ -76,8 +74,7 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
     campaigns[0]?.id || ""
   );
 
-  // Modal & Expandable Description States
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState<boolean>(false);
+  // Modal States
   const [viewTierModal, setViewTierModal] = useState<{
     name: string;
     amount: number;
@@ -89,7 +86,6 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
   const [pledgeModalOpen, setPledgeModalOpen] = useState<boolean>(false);
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
   const [customAmount, setCustomAmount] = useState<string>("2000");
-  const [donorMessage, setDonorMessage] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [validationError, setValidationError] = useState<string>("");
 
@@ -171,21 +167,19 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
       flatNumber: currentUser.flatNumber,
       amount: amountNum,
       tierName: selectedTier || "Community Supporter",
-      message: donorMessage.trim() || "Best wishes for the celebrations!",
       paymentRef,
       paymentMethod: "Razorpay",
     });
 
     setIsProcessing(false);
     setPledgeModalOpen(false);
-    setDonorMessage("");
 
     // Trigger Confetti
     confetti({
       particleCount: 150,
       spread: 90,
       origin: { y: 0.5 },
-      colors: ["#EFE4CC", "#F2C14E", "#4FD1A1", "#F3F5F9"],
+      colors: ["#E8B565", "#D9B872", "#8FBF8A", "#F5F1E8"],
     });
   };
 
@@ -282,7 +276,7 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
       particleCount: 120,
       spread: 80,
       origin: { y: 0.5 },
-      colors: ["#EFE4CC", "#F2C14E", "#4FD1A1"],
+      colors: ["#E8B565", "#D9B872", "#8FBF8A"],
     });
   };
 
@@ -320,7 +314,7 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
             Festival Sponsorships & Fund
           </h2>
           <p className="text-xs text-[var(--text-secondary)]">
-            Community event contributions, tier sponsorships & donor roll
+            Community contributions & sponsorships
           </p>
         </div>
 
@@ -344,9 +338,8 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
             key={camp.id}
             onClick={() => {
               setSelectedCampaignId(camp.id);
-              setIsDescriptionExpanded(false);
             }}
-            className={`pill-btn text-xs font-bold px-3.5 py-2 rounded-full whitespace-nowrap transition-all cursor-pointer ${
+            className={`tap-scale pill-btn text-xs font-bold px-3.5 py-2 rounded-full whitespace-nowrap transition-all cursor-pointer ${
               camp.id === activeCampaign.id
                 ? "bg-[var(--accent)] text-[var(--on-accent)] font-bold shadow-sm"
                 : "bg-[var(--card)] text-[var(--text-secondary)] border border-[var(--border)] hover:text-[var(--text)] hover:bg-[var(--surface)]"
@@ -371,7 +364,7 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
 
       {/* 1. Hero Campaign Card */}
       <DarkHeroCard>
-        <div className="flex items-start justify-between gap-3 mb-2">
+        <div className="flex items-center justify-between gap-2 mb-2">
           <div className="flex items-center gap-2">
             <span className="bg-[var(--accent)] text-[var(--on-accent)] p-1.5 rounded-xl font-bold shadow-sm">
               <Sparkles className="w-4 h-4" />
@@ -380,7 +373,7 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
               Community Festival Drive
             </span>
           </div>
-          <div className="flex items-center gap-1.5 text-[11px] text-[var(--text-secondary)] bg-[var(--surface)] px-2.5 py-1 rounded-full border border-[var(--border)]">
+          <div className="flex items-center gap-1.5 text-[11px] text-[var(--text-secondary)] bg-[var(--surface)] px-2.5 py-1 rounded-full border border-[var(--border)] shrink-0 whitespace-nowrap">
             <Calendar className="w-3 h-3 text-[var(--text)]" />
             <span>{activeCampaign.festivalDate}</span>
           </div>
@@ -389,41 +382,6 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
         <h3 className="text-xl font-extrabold text-[var(--text)] mt-2 leading-tight">
           {activeCampaign.title}
         </h3>
-
-        {/* Expandable Festival Description with Read More / Show Less Toggle */}
-        <div className="text-xs text-[var(--text-secondary)] mt-2 leading-relaxed">
-          {isDescriptionExpanded ? (
-            <p className="leading-relaxed text-[var(--text-secondary)]">
-              {activeCampaign.description}
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsDescriptionExpanded(false);
-                }}
-                className="text-[var(--accent)] hover:underline ml-1 font-medium text-xs focus:outline-none cursor-pointer"
-              >
-                Show less
-              </button>
-            </p>
-          ) : (
-            <div>
-              <p className="line-clamp-2 leading-relaxed text-[var(--text-secondary)]">
-                {activeCampaign.description}
-              </p>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsDescriptionExpanded(true);
-                }}
-                className="text-[var(--accent)] hover:underline ml-1 font-medium text-xs focus:outline-none cursor-pointer inline-block mt-0.5"
-              >
-                Read more
-              </button>
-            </div>
-          )}
-        </div>
 
         {/* Target Progress Bar */}
         <div className="mt-4 pt-4 border-t border-[var(--border)] space-y-2">
@@ -471,12 +429,10 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {activeCampaign.tiers.map((tier) => {
-            const isFull = tier.slotsFilled >= tier.slotsAvailable;
-
             return (
               <div
                 key={tier.name}
-                className="bg-[var(--card)] rounded-2xl p-4 border border-[var(--border)] flex flex-col justify-between space-y-3 hover:border-[var(--accent)]/40 transition-all"
+                className="bg-[var(--card)] rounded-2xl p-4 border border-[var(--border)] flex flex-col justify-between space-y-3 hover:border-[var(--accent)]/40 transition-all shadow-sm"
               >
                 <div>
                   <div className="flex justify-between items-start">
@@ -492,39 +448,18 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
                   <div className="text-lg font-black text-[var(--text)] mt-1">
                     {formatINR(tier.amount)}
                   </div>
-
-                  {/* Natural wrapping without overflow */}
-                  <p className="text-[11px] text-[var(--text-secondary)] mt-1.5 leading-relaxed">
-                    {tier.perks}
-                  </p>
-
-                  {/* View Tier Details Button */}
-                  <button
-                    type="button"
-                    onClick={() => setViewTierModal(tier)}
-                    className="text-[10px] text-[var(--accent)] hover:underline font-semibold mt-2 inline-flex items-center gap-1 cursor-pointer focus:outline-none"
-                  >
-                    <span>View Tier Details</span>
-                    <ChevronRight className="w-3 h-3" />
-                  </button>
                 </div>
 
-                <div className="pt-2 border-t border-[var(--border)] flex items-center justify-between">
-                  <span className="text-[10px] font-semibold text-[var(--text-secondary)]">
-                    {tier.slotsFilled} / {tier.slotsAvailable} slots taken
-                  </span>
-                  <button
-                    onClick={() => handleOpenPledge(tier.name, tier.amount)}
-                    disabled={isFull}
-                    className={`text-xs font-bold px-3.5 py-1.5 rounded-xl transition-all cursor-pointer ${
-                      isFull
-                        ? "bg-[var(--surface)] text-[var(--text-secondary)]/50 cursor-not-allowed border border-[var(--border)]"
-                        : "bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[var(--on-accent)]"
-                    }`}
-                  >
-                    {isFull ? "Filled" : "Select Slot"}
-                  </button>
-                </div>
+                {/* Prominent unambiguous 'View Tier Details' button */}
+                <button
+                  type="button"
+                  onClick={() => setViewTierModal(tier)}
+                  className="w-full py-2 px-3 rounded-xl bg-[var(--surface)] hover:bg-[var(--surface)]/80 border border-[var(--border)] hover:border-[var(--accent)]/40 flex items-center justify-between text-xs font-semibold text-[var(--accent)] transition-all cursor-pointer shadow-sm group focus:outline-none"
+                  id={`btn-view-tier-${tier.name.toLowerCase().replace(/\s+/g, "-")}`}
+                >
+                  <span>View Tier Details</span>
+                  <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                </button>
               </div>
             );
           })}
@@ -545,23 +480,28 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
           </span>
         </div>
 
-        <div className="divide-y divide-white/[0.08] space-y-2">
+        <div className="divide-y divide-[#2B3854]">
           {activeCampaign.donations.length === 0 ? (
             <div className="py-6 text-center text-xs text-[var(--text-secondary)]">
               Be the first to sponsor or contribute to this festival drive!
             </div>
           ) : (
             activeCampaign.donations.map((don) => (
-              <div key={don.id} className="pt-2.5 first:pt-0 flex items-start justify-between gap-3">
-                <div className="space-y-0.5">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-[var(--text)]">{don.donorName}</span>
-                    <span className="text-[10px] font-bold text-[var(--text)] bg-[var(--surface)] border border-[var(--border)] px-2 py-0.5 rounded-full">
+              <div
+                key={don.id}
+                className="py-3 first:pt-0 last:pb-0 flex items-start justify-between gap-3"
+              >
+                <div className="space-y-1 min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-xs font-bold text-[var(--text)]">
+                      {don.donorName}
+                    </span>
+                    <span className="text-[10px] font-bold text-[var(--text)] bg-[var(--surface)] border border-[var(--border)] px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">
                       Flat {don.flatNumber}
                     </span>
                     {don.tierName && (
                       <span
-                        className="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                        className="text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap shrink-0"
                         style={{
                           color: getTierBadgeStyle(don.tierName).color,
                           backgroundColor: "var(--surface)",
@@ -572,16 +512,12 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
                       </span>
                     )}
                   </div>
-                  {don.message && (
-                    <p className="text-[11px] text-[var(--text-secondary)] italic flex items-center gap-1 mt-0.5">
-                      <MessageSquareQuote className="w-3 h-3 text-[var(--text-secondary)]/70 inline" />
-                      "{don.message}"
-                    </p>
-                  )}
-                  <span className="text-[10px] text-[var(--text-secondary)]/70 block">{don.donatedAt}</span>
+                  <span className="text-[10px] text-[var(--text-secondary)]/70 block">
+                    {don.donatedAt}
+                  </span>
                 </div>
 
-                <div className="text-sm font-black text-[var(--text)] shrink-0">
+                <div className="text-sm font-black text-[var(--text)] shrink-0 text-right whitespace-nowrap pt-0.5">
                   {formatINR(don.amount)}
                 </div>
               </div>
@@ -593,7 +529,7 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
       {/* 4. Tier Details Modal */}
       {viewTierModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto">
-          <div className="w-full max-w-sm bg-[var(--card)] text-[var(--text)] rounded-2xl border border-[var(--border)] shadow-2xl overflow-hidden space-y-4 p-5 my-auto">
+          <div className="modal-pop-in w-full max-w-sm bg-[var(--card)] text-[var(--text)] rounded-2xl border border-[var(--border)] shadow-2xl overflow-hidden space-y-4 p-5 my-auto">
             <div className="flex items-start justify-between border-b border-[var(--border)] pb-3">
               <div className="flex items-center gap-2.5">
                 <div
@@ -679,7 +615,7 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
       {/* 5. Pledge Donation Modal */}
       {pledgeModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in overflow-y-auto">
-          <div className="w-full max-w-md bg-[var(--card)] text-[var(--text)] rounded-2xl border border-[var(--border)] shadow-2xl overflow-hidden my-auto">
+          <div className="modal-pop-in w-full max-w-md bg-[var(--card)] text-[var(--text)] rounded-2xl border border-[var(--border)] shadow-2xl overflow-hidden my-auto">
             <div className="p-4 flex items-center justify-between border-b border-[var(--border)]">
               <div className="flex items-center gap-2">
                 <Gift className="w-4 h-4 text-[var(--text)]" />
@@ -695,6 +631,16 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
             </div>
 
             <form onSubmit={handlePledgeSubmit} className="p-5 space-y-4 text-xs">
+              {/* Festival Campaign Details Context */}
+              <div className="bg-[var(--surface)] p-3 rounded-xl border border-[var(--border)] space-y-1">
+                <div className="font-bold text-[var(--text)] text-xs">{activeCampaign.title}</div>
+                {activeCampaign.description && (
+                  <p className="text-[11px] text-[var(--text-secondary)] leading-relaxed">
+                    {activeCampaign.description}
+                  </p>
+                )}
+              </div>
+
               <div>
                 <label className="text-[var(--text-secondary)] block mb-1">Contributor</label>
                 <div className="bg-[var(--surface)] p-2.5 rounded-xl text-[var(--text)] font-semibold flex justify-between border border-[var(--border)]">
@@ -733,19 +679,6 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
                   <span>{validationError}</span>
                 </div>
               )}
-
-              <div>
-                <label className="text-[var(--text-secondary)] block mb-1">
-                  Festive Greetings / Note (Optional)
-                </label>
-                <textarea
-                  rows={2}
-                  value={donorMessage}
-                  onChange={(e) => setDonorMessage(e.target.value)}
-                  placeholder="e.g. Wishing our society neighbors a wonderful festival!"
-                  className="w-full bg-[var(--bg)] text-[var(--text)] p-2.5 rounded-xl border border-[var(--border)] focus:outline-none focus:border-[var(--accent)] resize-none"
-                />
-              </div>
 
               <div className="pt-2 space-y-2.5">
                 <button
@@ -799,22 +732,22 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
       {/* 6. Dedicated Full-Screen Sub-View: Add Festival & Sponsorship Drive */}
       {isAdmin && isCreateDriveModalOpen && (() => {
         const subViewContent = (
-          <div className="fixed inset-0 z-50 bg-[#0A1120] text-[#F3F5F9] min-h-screen w-full overflow-y-auto pb-28 animate-fade-in">
+          <div className="fixed inset-0 z-50 bg-[#0E1420] text-[#F5F1E8] min-h-screen w-full overflow-y-auto pb-28 animate-fade-in">
             {/* 2. Desktop / Responsive Shell Alignment */}
-            <div className="max-w-md mx-auto min-h-screen bg-[#0A1120] relative flex flex-col">
+            <div className="max-w-md mx-auto min-h-screen bg-[#0E1420] relative flex flex-col">
               {/* 3. Sticky Top App Bar */}
-              <header className="sticky top-0 z-20 bg-[#0A1120] px-4 pt-12 pb-3 border-b border-[#22304A] flex items-center justify-between">
+              <header className="sticky top-0 z-20 bg-[#0E1420] px-4 pt-12 pb-3 border-b border-[#2B3854] flex items-center justify-between">
                 <button
                   type="button"
                   onClick={() => setIsCreateDriveModalOpen(false)}
-                  className="w-9 h-9 rounded-full bg-[#16233A] border border-[#22304A] text-[#F3F5F9] flex items-center justify-center hover:bg-[#16233A]/80 transition cursor-pointer shadow-sm active:scale-95"
+                  className="w-9 h-9 rounded-full bg-[#1C2740] border border-[#2B3854] text-[#F5F1E8] flex items-center justify-center hover:bg-[#1C2740]/80 transition cursor-pointer shadow-sm active:scale-95"
                   aria-label="Go Back"
                   id="btn-back-create-festival"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
 
-                <h1 className="text-[17px] font-semibold text-[#F3F5F9]">New Festival Drive</h1>
+                <h1 className="text-[17px] font-semibold text-[#F5F1E8]">New Festival Drive</h1>
 
                 <div className="w-9" aria-hidden="true" />
               </header>
@@ -822,15 +755,15 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
               {/* 4. Form Sections & Button */}
               <form onSubmit={handleCreateCampaignSubmit} className="flex-1 flex flex-col">
                 {/* SECTION 1: FESTIVAL DETAILS */}
-                <div className="mx-4 my-4 bg-[#111C2E] border border-[#22304A] rounded-2xl p-4 space-y-4">
-                  <div className="border-b border-[#22304A] pb-2.5">
-                    <h2 className="text-sm font-bold text-[#F3F5F9]">Festival Details</h2>
-                    <p className="text-xs text-[#8C97AD] mt-0.5">Primary information for the community drive</p>
+                <div className="mx-4 my-4 bg-[#161F30] border border-[#2B3854] rounded-2xl p-4 space-y-4">
+                  <div className="border-b border-[#2B3854] pb-2.5">
+                    <h2 className="text-sm font-bold text-[#F5F1E8]">Festival Details</h2>
+                    <p className="text-xs text-[#A6ACC0] mt-0.5">Primary information for the community drive</p>
                   </div>
 
                   {/* Field: Festival / Drive Title */}
                   <div>
-                    <label className="text-[12px] font-semibold text-[#8C97AD] uppercase tracking-wider block mb-1.5">
+                    <label className="text-[12px] font-semibold text-[#A6ACC0] uppercase tracking-wider block mb-1.5">
                       Festival / Drive Title <span className="text-rose-400">*</span>
                     </label>
                     <input
@@ -839,14 +772,14 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
                       value={driveTitle}
                       onChange={(e) => setDriveTitle(e.target.value)}
                       placeholder="e.g. Diwali Deepotsav & Mela 2026"
-                      className="w-full bg-[#16233A] border border-[#22304A] rounded-xl px-4 py-3 text-[#F3F5F9] placeholder:text-[#8C97AD] focus:outline-none focus:border-[#EFE4CC] text-sm"
+                      className="w-full bg-[#1C2740] border border-[#2B3854] rounded-xl px-4 py-3 text-[#F5F1E8] placeholder:text-[#A6ACC0] focus:outline-none focus:border-[#E8B565] text-sm"
                       id="input-drive-title"
                     />
                   </div>
 
                   {/* Field: Date Range */}
                   <div>
-                    <label className="text-[12px] font-semibold text-[#8C97AD] uppercase tracking-wider block mb-1.5">
+                    <label className="text-[12px] font-semibold text-[#A6ACC0] uppercase tracking-wider block mb-1.5">
                       Date Range <span className="text-rose-400">*</span>
                     </label>
                     <input
@@ -855,14 +788,14 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
                       value={driveDate}
                       onChange={(e) => setDriveDate(e.target.value)}
                       placeholder="e.g. 31 Oct – 02 Nov 2026"
-                      className="w-full bg-[#16233A] border border-[#22304A] rounded-xl px-4 py-3 text-[#F3F5F9] placeholder:text-[#8C97AD] focus:outline-none focus:border-[#EFE4CC] text-sm"
+                      className="w-full bg-[#1C2740] border border-[#2B3854] rounded-xl px-4 py-3 text-[#F5F1E8] placeholder:text-[#A6ACC0] focus:outline-none focus:border-[#E8B565] text-sm"
                       id="input-drive-date"
                     />
                   </div>
 
                   {/* Field: Fundraising Target (₹) */}
                   <div>
-                    <label className="text-[12px] font-semibold text-[#8C97AD] uppercase tracking-wider block mb-1.5">
+                    <label className="text-[12px] font-semibold text-[#A6ACC0] uppercase tracking-wider block mb-1.5">
                       Fundraising Target (₹) <span className="text-rose-400">*</span>
                     </label>
                     <input
@@ -873,14 +806,14 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
                       value={driveGoal}
                       onChange={(e) => setDriveGoal(e.target.value)}
                       placeholder="250000"
-                      className="w-full bg-[#16233A] border border-[#22304A] rounded-xl px-4 py-3 text-[#F3F5F9] placeholder:text-[#8C97AD] focus:outline-none focus:border-[#EFE4CC] text-sm font-semibold"
+                      className="w-full bg-[#1C2740] border border-[#2B3854] rounded-xl px-4 py-3 text-[#F5F1E8] placeholder:text-[#A6ACC0] focus:outline-none focus:border-[#E8B565] text-sm font-semibold"
                       id="input-drive-goal"
                     />
                   </div>
 
                   {/* Field: Full Description */}
                   <div>
-                    <label className="text-[12px] font-semibold text-[#8C97AD] uppercase tracking-wider block mb-1.5">
+                    <label className="text-[12px] font-semibold text-[#A6ACC0] uppercase tracking-wider block mb-1.5">
                       Full Description <span className="text-rose-400">*</span>
                     </label>
                     <textarea
@@ -889,23 +822,23 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
                       value={driveDesc}
                       onChange={(e) => setDriveDesc(e.target.value)}
                       placeholder="Describe the celebration, events, and community activities..."
-                      className="w-full bg-[#16233A] border border-[#22304A] rounded-xl px-4 py-3 text-[#F3F5F9] placeholder:text-[#8C97AD] focus:outline-none focus:border-[#EFE4CC] text-sm resize-none leading-relaxed"
+                      className="w-full bg-[#1C2740] border border-[#2B3854] rounded-xl px-4 py-3 text-[#F5F1E8] placeholder:text-[#A6ACC0] focus:outline-none focus:border-[#E8B565] text-sm resize-none leading-relaxed"
                       id="input-drive-desc"
                     />
                   </div>
                 </div>
 
                 {/* SECTION 2: SPONSORSHIP TIERS CONFIGURATION */}
-                <div className="mx-4 my-4 bg-[#111C2E] border border-[#22304A] rounded-2xl p-4 space-y-4">
-                  <div className="flex items-center justify-between border-b border-[#22304A] pb-2.5">
+                <div className="mx-4 my-4 bg-[#161F30] border border-[#2B3854] rounded-2xl p-4 space-y-4">
+                  <div className="flex items-center justify-between border-b border-[#2B3854] pb-2.5">
                     <div>
-                      <h2 className="text-sm font-bold text-[#F3F5F9]">Sponsorship Tiers Configuration</h2>
-                      <p className="text-xs text-[#8C97AD] mt-0.5">Configure tier amounts, slot caps & perks</p>
+                      <h2 className="text-sm font-bold text-[#F5F1E8]">Sponsorship Tiers Configuration</h2>
+                      <p className="text-xs text-[#A6ACC0] mt-0.5">Configure tier amounts, slot caps & perks</p>
                     </div>
                     <button
                       type="button"
                       onClick={handleAddTierRow}
-                      className="flex items-center gap-1 text-xs text-[#EFE4CC] hover:underline font-bold cursor-pointer"
+                      className="flex items-center gap-1 text-xs text-[#E8B565] hover:underline font-bold cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       <span>Add Tier</span>
@@ -916,7 +849,7 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
                     {driveTiers.map((tier, idx) => (
                       <div
                         key={idx}
-                        className="bg-[#16233A] p-3.5 rounded-xl border border-[#22304A] space-y-3 relative group"
+                        className="bg-[#1C2740] p-3.5 rounded-xl border border-[#2B3854] space-y-3 relative group"
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
@@ -924,7 +857,7 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
                               className="w-4 h-4"
                               style={{ color: getTierBadgeStyle(tier.name).color }}
                             />
-                            <span className="text-xs font-bold text-[#F3F5F9]">
+                            <span className="text-xs font-bold text-[#F5F1E8]">
                               Tier {idx + 1}
                             </span>
                           </div>
@@ -932,7 +865,7 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
                             <button
                               type="button"
                               onClick={() => handleRemoveTierRow(idx)}
-                              className="text-[#8C97AD] hover:text-rose-400 p-1 transition-colors cursor-pointer"
+                              className="text-[#A6ACC0] hover:text-rose-400 p-1 transition-colors cursor-pointer"
                               title="Remove Tier"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -942,20 +875,20 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
 
                         <div className="space-y-2.5">
                           <div>
-                            <label className="text-[11px] text-[#8C97AD] block mb-1">Tier Name</label>
+                            <label className="text-[11px] text-[#A6ACC0] block mb-1">Tier Name</label>
                             <input
                               type="text"
                               required
                               value={tier.name}
                               onChange={(e) => handleUpdateTier(idx, "name", e.target.value)}
                               placeholder="e.g. Grand Festival Patron (Gold)"
-                              className="w-full bg-[#111C2E] border border-[#22304A] rounded-xl px-3 py-2 text-xs text-[#F3F5F9] placeholder:text-[#8C97AD] focus:outline-none focus:border-[#EFE4CC]"
+                              className="w-full bg-[#161F30] border border-[#2B3854] rounded-xl px-3 py-2 text-xs text-[#F5F1E8] placeholder:text-[#A6ACC0] focus:outline-none focus:border-[#E8B565]"
                             />
                           </div>
 
                           <div className="grid grid-cols-2 gap-2">
                             <div>
-                              <label className="text-[11px] text-[#8C97AD] block mb-1">Price (₹)</label>
+                              <label className="text-[11px] text-[#A6ACC0] block mb-1">Price (₹)</label>
                               <input
                                 type="number"
                                 required
@@ -963,31 +896,31 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
                                 step="100"
                                 value={tier.amount}
                                 onChange={(e) => handleUpdateTier(idx, "amount", e.target.value)}
-                                className="w-full bg-[#111C2E] border border-[#22304A] rounded-xl px-3 py-2 text-xs text-[#F3F5F9] placeholder:text-[#8C97AD] focus:outline-none focus:border-[#EFE4CC] font-semibold"
+                                className="w-full bg-[#161F30] border border-[#2B3854] rounded-xl px-3 py-2 text-xs text-[#F5F1E8] placeholder:text-[#A6ACC0] focus:outline-none focus:border-[#E8B565] font-semibold"
                               />
                             </div>
                             <div>
-                              <label className="text-[11px] text-[#8C97AD] block mb-1">Max Slots</label>
+                              <label className="text-[11px] text-[#A6ACC0] block mb-1">Max Slots</label>
                               <input
                                 type="number"
                                 required
                                 min="1"
                                 value={tier.slotsAvailable}
                                 onChange={(e) => handleUpdateTier(idx, "slotsAvailable", e.target.value)}
-                                className="w-full bg-[#111C2E] border border-[#22304A] rounded-xl px-3 py-2 text-xs text-[#F3F5F9] placeholder:text-[#8C97AD] focus:outline-none focus:border-[#EFE4CC] font-semibold"
+                                className="w-full bg-[#161F30] border border-[#2B3854] rounded-xl px-3 py-2 text-xs text-[#F5F1E8] placeholder:text-[#A6ACC0] focus:outline-none focus:border-[#E8B565] font-semibold"
                               />
                             </div>
                           </div>
 
                           <div>
-                            <label className="text-[11px] text-[#8C97AD] block mb-1">Tier Perks & Benefits</label>
+                            <label className="text-[11px] text-[#A6ACC0] block mb-1">Tier Perks & Benefits</label>
                             <input
                               type="text"
                               required
                               value={tier.perks}
                               onChange={(e) => handleUpdateTier(idx, "perks", e.target.value)}
                               placeholder="e.g. VIP front-row seating + Special Aarti + Stage banner"
-                              className="w-full bg-[#111C2E] border border-[#22304A] rounded-xl px-3 py-2 text-xs text-[#F3F5F9] placeholder:text-[#8C97AD] focus:outline-none focus:border-[#EFE4CC]"
+                              className="w-full bg-[#161F30] border border-[#2B3854] rounded-xl px-3 py-2 text-xs text-[#F5F1E8] placeholder:text-[#A6ACC0] focus:outline-none focus:border-[#E8B565]"
                             />
                           </div>
                         </div>
@@ -1000,7 +933,7 @@ export const SponsorshipView: React.FC<SponsorshipViewProps> = ({
                 <div className="mt-auto">
                   <button
                     type="submit"
-                    className="mx-4 my-6 w-[calc(100%-2rem)] py-3.5 rounded-xl bg-[#EFE4CC] text-[#0A1120] font-bold text-[15px] hover:bg-[#F7F0DF] transition cursor-pointer shadow-sm active:scale-[0.99] flex items-center justify-center gap-2"
+                    className="mx-4 my-6 w-[calc(100%-2rem)] py-3.5 rounded-xl bg-[#E8B565] text-[#0E1420] font-bold text-[15px] hover:bg-[#F0C87D] transition cursor-pointer shadow-sm active:scale-[0.99] flex items-center justify-center gap-2"
                     id="btn-publish-festival-drive"
                   >
                     <Plus className="w-4 h-4 stroke-[2.5]" />

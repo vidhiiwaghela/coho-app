@@ -40,6 +40,21 @@ export interface MaintenanceBill {
   propertyTaxAmount?: number;
 }
 
+export type PropertyType = "1_bhk" | "2_bhk" | "3_bhk" | "penthouse";
+
+export interface FlatPropertyTax {
+  flatId: string;
+  flatNumber: string;
+  residentName: string;
+  propertyType: PropertyType;
+  annualTaxAmount: number;
+  sacNumber: string;
+  status: "paid" | "not_paid";
+  lastPaidDate?: string;
+  paymentRef?: string;
+  paymentMethod?: string;
+}
+
 export interface DocumentItem {
   id: string;
   flatId?: string; // specific flat or empty/all for society-wide
@@ -62,11 +77,12 @@ export interface DocumentRequest {
   documentType: "noc_sale_rent" | "share_certificate" | "renovation_permission" | "other";
   documentName: string;
   copyType: "digital" | "physical";
-  status: "pending" | "fulfilled";
+  status: "pending" | "fulfilled" | "unavailable" | "not_available";
   requestedAt: string;
   fulfilledAt?: string;
   fulfilledFileName?: string;
   note?: string;
+  notAvailableReason?: string;
 }
 
 export interface ComplaintTicket {
@@ -180,7 +196,6 @@ export interface SponsorshipCampaign {
     flatNumber: string;
     amount: number;
     tierName?: string;
-    message?: string;
     donatedAt: string;
     paymentRef?: string;
     paymentMethod?: string;

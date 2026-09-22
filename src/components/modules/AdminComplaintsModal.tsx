@@ -24,6 +24,9 @@ interface AdminComplaintsModalProps {
     status: "pending" | "in_progress" | "resolved",
     adminResponse?: string
   ) => void;
+  initialFilter?: "all" | "pending" | "in_progress" | "resolved";
+  isAdmin?: boolean;
+  onLodgeNewComplaint?: () => void;
 }
 
 export const AdminComplaintsModal: React.FC<AdminComplaintsModalProps> = ({
@@ -31,10 +34,19 @@ export const AdminComplaintsModal: React.FC<AdminComplaintsModalProps> = ({
   onClose,
   complaints,
   onUpdateStatus,
+  initialFilter = "all",
+  isAdmin = true,
+  onLodgeNewComplaint,
 }) => {
-  const [filter, setFilter] = useState<"all" | "pending" | "in_progress" | "resolved">("all");
+  const [filter, setFilter] = useState<"all" | "pending" | "in_progress" | "resolved">(initialFilter);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [responseNote, setResponseNote] = useState("");
+
+  React.useEffect(() => {
+    if (initialFilter) {
+      setFilter(initialFilter);
+    }
+  }, [initialFilter, isOpen]);
 
   if (!isOpen) return null;
 
@@ -53,36 +65,52 @@ export const AdminComplaintsModal: React.FC<AdminComplaintsModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-[#111C2E] border border-[#22304A] rounded-2xl w-full max-w-xl shadow-sm p-6 relative animate-scale-up space-y-5 text-[#F3F5F9] max-h-[90vh] flex flex-col">
+      <div className="bg-[#161F30] border border-[#2B3854] rounded-2xl w-full max-w-xl shadow-sm p-6 relative animate-scale-up space-y-5 text-[#F5F1E8] max-h-[90vh] flex flex-col">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-[#8C97AD] hover:text-[#F3F5F9] p-1.5 rounded-full hover:bg-[#16233A] transition-colors"
+          className="absolute top-4 right-4 text-[#A6ACC0] hover:text-[#F5F1E8] p-1.5 rounded-full hover:bg-[#1C2740] transition-colors cursor-pointer"
           id="btn-close-admin-complaints-modal"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Modal Header */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#EFE4CC]/15 text-[#F3F5F9] border border-[#EFE4CC]/30 flex items-center justify-center shrink-0">
-            <AlertCircle className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="text-base font-bold text-[#F3F5F9]">
-                Society Complaints & Tickets
-              </h3>
-              {pendingCount > 0 && (
-                <span className="text-[#A9B4CC] bg-[#111C2E] border border-[#A9B4CC]/30 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                  {pendingCount} Pending
-                </span>
-              )}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#E8B565]/15 text-[#F5F1E8] border border-[#E8B565]/30 flex items-center justify-center shrink-0">
+              <AlertCircle className="w-5 h-5" />
             </div>
-            <p className="text-xs text-[#8C97AD]">
-              Review resident tickets & progress status
-            </p>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-base font-bold text-[#F5F1E8]">
+                  {isAdmin ? "Society Complaints & Tickets" : "My Society Complaints & Tickets"}
+                </h3>
+                {pendingCount > 0 && (
+                  <span className="text-[#A9B4CC] bg-[#161F30] border border-[#A9B4CC]/30 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    {pendingCount} Pending
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-[#A6ACC0]">
+                {isAdmin
+                  ? "Review resident tickets & progress status"
+                  : "Track status of maintenance requests and tickets"}
+              </p>
+            </div>
           </div>
+          {!isAdmin && onLodgeNewComplaint && (
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onLodgeNewComplaint();
+              }}
+              className="mr-8 bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] font-bold text-xs px-3.5 py-1.5 rounded-xl shadow-sm transition active:scale-95 shrink-0 cursor-pointer"
+            >
+              + Lodge Complaint
+            </button>
+          )}
         </div>
 
         {/* Filter Pills */}
@@ -93,8 +121,8 @@ export const AdminComplaintsModal: React.FC<AdminComplaintsModalProps> = ({
               onClick={() => setFilter(f)}
               className={`pill-btn text-xs font-bold px-3 py-1.5 rounded-full transition-all whitespace-nowrap ${
                 filter === f
-                  ? "bg-[#EFE4CC] text-[#0A1120] font-bold shadow-sm"
-                  : "bg-[#111C2E] text-[#8C97AD] border border-[#22304A] hover:border-[#22304A] hover:text-[#F3F5F9]"
+                  ? "bg-[#E8B565] text-[#0E1420] font-bold shadow-sm"
+                  : "bg-[#161F30] text-[#A6ACC0] border border-[#2B3854] hover:border-[#2B3854] hover:text-[#F5F1E8]"
               }`}
             >
               {f === "all"
@@ -115,19 +143,19 @@ export const AdminComplaintsModal: React.FC<AdminComplaintsModalProps> = ({
               return (
                 <div
                   key={ticket.id}
-                  className="p-4 rounded-xl bg-[#16233A]/50 border border-transparent space-y-3 transition-all"
+                  className="p-4 rounded-xl bg-[#1C2740]/50 border border-transparent space-y-3 transition-all"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-[#F3F5F9] bg-[#111C2E] border border-[#22304A] px-2 py-0.5 rounded-md">
+                        <span className="text-xs font-bold text-[#F5F1E8] bg-[#161F30] border border-[#2B3854] px-2 py-0.5 rounded-md">
                           Flat {ticket.flatNumber}
                         </span>
-                        <span className="text-xs font-semibold text-[#8C97AD]">
+                        <span className="text-xs font-semibold text-[#A6ACC0]">
                           {ticket.categoryLabel}
                         </span>
                       </div>
-                      <p className="text-xs text-[#8C97AD] mt-1">
+                      <p className="text-xs text-[#A6ACC0] mt-1">
                         Reported by <strong>{ticket.residentName}</strong> • {ticket.createdAt}
                       </p>
                     </div>
@@ -136,13 +164,13 @@ export const AdminComplaintsModal: React.FC<AdminComplaintsModalProps> = ({
                     <span
                       className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-0.5 rounded-full border shrink-0 ${
                         ticket.status === "pending" || ticket.status === "in_progress"
-                          ? "text-[#A9B4CC] bg-[#111C2E] border-[#A9B4CC]/30"
-                          : "text-[#4FD1A1] bg-[#111C2E] border-[#4FD1A1]/30"
+                          ? "text-[#A9B4CC] bg-[#161F30] border-[#A9B4CC]/30"
+                          : "text-[#8FBF8A] bg-[#161F30] border-[#8FBF8A]/30"
                       }`}
                     >
                       {ticket.status === "pending" && <Clock className="w-3 h-3 text-[#A9B4CC]" />}
                       {ticket.status === "in_progress" && <RefreshCw className="w-3 h-3 text-[#A9B4CC] animate-spin" />}
-                      {ticket.status === "resolved" && <CheckCircle2 className="w-3 h-3 text-[#4FD1A1]" />}
+                      {ticket.status === "resolved" && <CheckCircle2 className="w-3 h-3 text-[#8FBF8A]" />}
                       <span className="capitalize">
                         {ticket.status === "in_progress" ? "In Progress" : ticket.status}
                       </span>
@@ -150,18 +178,18 @@ export const AdminComplaintsModal: React.FC<AdminComplaintsModalProps> = ({
                   </div>
 
                   {/* Complaint Description */}
-                  <p className="text-xs text-[#F3F5F9] bg-[#111C2E] p-3 rounded-xl border border-[#22304A] leading-relaxed">
+                  <p className="text-xs text-[#F5F1E8] bg-[#161F30] p-3 rounded-xl border border-[#2B3854] leading-relaxed">
                     {ticket.description}
                   </p>
 
                   {/* Admin Existing Response */}
                   {ticket.adminResponse && !isEditing && (
-                    <div className="p-3 rounded-xl bg-[#111C2E] border border-[#22304A] space-y-1">
-                      <div className="flex items-center justify-between text-[11px] font-bold text-[#F3F5F9]">
+                    <div className="p-3 rounded-xl bg-[#161F30] border border-[#2B3854] space-y-1">
+                      <div className="flex items-center justify-between text-[11px] font-bold text-[#F5F1E8]">
                         <span>Managing Committee Note:</span>
-                        <span className="text-[10px] text-[#8C97AD]">Official Response</span>
+                        <span className="text-[10px] text-[#A6ACC0]">Official Response</span>
                       </div>
-                      <p className="text-xs text-[#F3F5F9]/90 leading-relaxed">
+                      <p className="text-xs text-[#F5F1E8]/90 leading-relaxed">
                         {ticket.adminResponse}
                       </p>
                     </div>
@@ -169,38 +197,38 @@ export const AdminComplaintsModal: React.FC<AdminComplaintsModalProps> = ({
 
                   {/* Admin Inline Action Row */}
                   {isEditing ? (
-                    <div className="space-y-2 pt-2 border-t border-[#22304A]">
+                    <div className="space-y-2 pt-2 border-t border-[#2B3854]">
                       <textarea
                         rows={2}
                         value={responseNote}
                         onChange={(e) => setResponseNote(e.target.value)}
                         placeholder="Add committee response note (e.g., Plumber assigned, inspection tomorrow 11 AM)..."
-                        className="w-full bg-[#0A1120] border border-[#22304A] rounded-xl p-2.5 text-xs text-[#F3F5F9] placeholder-[#8C97AD]/50 focus:outline-none focus:border-[#EFE4CC]"
+                        className="w-full bg-[#0E1420] border border-[#2B3854] rounded-xl p-2.5 text-xs text-[#F5F1E8] placeholder-[#A6ACC0]/50 focus:outline-none focus:border-[#E8B565]"
                       />
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => handleSaveResponse(ticket.id, "in_progress")}
-                          className="pill-btn bg-[#EFE4CC] text-[#0A1120] font-bold text-xs px-3 py-1.5 rounded-lg shadow-sm hover:bg-[#F7F0DF]"
+                          className="pill-btn bg-[#E8B565] text-[#0E1420] font-bold text-xs px-3 py-1.5 rounded-lg shadow-sm hover:bg-[#F0C87D]"
                         >
                           Set In Progress
                         </button>
                         <button
                           onClick={() => handleSaveResponse(ticket.id, "resolved")}
-                          className="pill-btn bg-[#16233A] text-[#F3F5F9] border border-[#EFE4CC]/40 font-bold text-xs px-3 py-1.5 rounded-lg hover:opacity-90"
+                          className="pill-btn bg-[#1C2740] text-[#F5F1E8] border border-[#E8B565]/40 font-bold text-xs px-3 py-1.5 rounded-lg hover:opacity-90"
                         >
                           Mark Resolved
                         </button>
                         <button
                           onClick={() => setEditingId(null)}
-                          className="text-xs text-[#8C97AD] hover:text-[#F3F5F9] px-2 py-1"
+                          className="text-xs text-[#A6ACC0] hover:text-[#F5F1E8] px-2 py-1"
                         >
                           Cancel
                         </button>
                       </div>
                     </div>
-                  ) : (
-                    <div className="flex items-center justify-between pt-1 border-t border-[#22304A]">
-                      <span className="text-[11px] text-[#8C97AD]">
+                  ) : isAdmin ? (
+                    <div className="flex items-center justify-between pt-1 border-t border-[#2B3854]">
+                      <span className="text-[11px] text-[#A6ACC0]">
                         Update ticket status:
                       </span>
                       <div className="flex items-center gap-1.5">
@@ -210,7 +238,7 @@ export const AdminComplaintsModal: React.FC<AdminComplaintsModalProps> = ({
                               setEditingId(ticket.id);
                               setResponseNote(ticket.adminResponse || "");
                             }}
-                            className="pill-btn bg-[#111C2E] hover:bg-[#16233A] border border-[#22304A] text-[#F3F5F9] font-semibold text-[11px] px-2.5 py-1 rounded-lg transition-all"
+                            className="pill-btn bg-[#161F30] hover:bg-[#1C2740] border border-[#2B3854] text-[#F5F1E8] font-semibold text-[11px] px-2.5 py-1 rounded-lg transition-all cursor-pointer"
                           >
                             Update Progress
                           </button>
@@ -218,19 +246,35 @@ export const AdminComplaintsModal: React.FC<AdminComplaintsModalProps> = ({
                         {ticket.status !== "resolved" && (
                           <button
                             onClick={() => onUpdateStatus(ticket.id, "resolved", "Resolved by Managing Committee")}
-                            className="pill-btn bg-[#16233A] hover:opacity-90 text-[#F3F5F9] border border-[#EFE4CC]/40 font-bold text-[11px] px-2.5 py-1 rounded-lg transition-all"
+                            className="pill-btn bg-[#1C2740] hover:opacity-90 text-[#F5F1E8] border border-[#E8B565]/40 font-bold text-[11px] px-2.5 py-1 rounded-lg transition-all cursor-pointer"
                           >
                             Resolve Ticket
                           </button>
                         )}
                       </div>
                     </div>
+                  ) : (
+                    <div className="pt-1 border-t border-[#2B3854] text-[11px] text-[#A6ACC0]">
+                      {ticket.status === "resolved" ? (
+                        <span className="text-[#8FBF8A] font-medium flex items-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          This ticket has been marked resolved.
+                        </span>
+                      ) : ticket.status === "in_progress" ? (
+                        <span className="text-[#A9B4CC] font-medium flex items-center gap-1">
+                          <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                          Maintenance technician assigned. Work is in progress.
+                        </span>
+                      ) : (
+                        <span>Logged ticket submitted. Awaiting society office review.</span>
+                      )}
+                    </div>
                   )}
                 </div>
               );
             })
           ) : (
-            <div className="py-12 text-center text-[#8C97AD] text-xs">
+            <div className="py-12 text-center text-[#A6ACC0] text-xs">
               No complaints found in this filter.
             </div>
           )}

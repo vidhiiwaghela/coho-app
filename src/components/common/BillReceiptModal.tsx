@@ -36,7 +36,7 @@ export const BillReceiptModal: React.FC<BillReceiptModalProps> = ({
         {/* Header toolbar (Hidden during print) */}
         <div className="p-4 bg-elevatedSurface text-primaryText flex items-center justify-between border-b border-borderDivider print:hidden">
           <div className="flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-[#F3F5F9]" />
+            <Building2 className="w-5 h-5 text-[#F5F1E8]" />
             <div>
               <h3 className="text-sm font-bold leading-tight">Official Maintenance Receipt</h3>
               <p className="text-[11px] text-secondaryText">Emerald Heights Co-operative Housing Society</p>
@@ -74,8 +74,8 @@ export const BillReceiptModal: React.FC<BillReceiptModalProps> = ({
               <div className="text-xs text-textMuted mt-1">Paid on: {bill.paidAt || bill.billingDate}</div>
             </div>
             <div className="text-right">
-              <div className="inline-flex items-center gap-1 text-xs font-bold text-[#4FD1A1] bg-[#111C2E] px-2.5 py-1 rounded-full border border-[#4FD1A1]/30 print:text-emerald-700 print:bg-emerald-50 print:border-emerald-600">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#4FD1A1] print:text-emerald-600" />
+              <div className="inline-flex items-center gap-1 text-xs font-bold text-[#8FBF8A] bg-[#161F30] px-2.5 py-1 rounded-full border border-[#8FBF8A]/30 print:text-emerald-700 print:bg-emerald-50 print:border-emerald-600">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#8FBF8A] print:text-emerald-600" />
                 PAID & VERIFIED
               </div>
               <div className="text-xs text-textMuted mt-1">Method: {bill.paymentMethod || "UPI"}</div>
@@ -132,7 +132,7 @@ export const BillReceiptModal: React.FC<BillReceiptModalProps> = ({
         <div className="p-4 bg-elevatedSurface border-t border-borderDivider flex justify-end gap-2 print:hidden">
           <button
             onClick={handlePrint}
-            className="bg-[#EFE4CC] hover:bg-[#F7F0DF] text-[#0A1120] text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition-all"
+            className="bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] text-xs font-bold px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition-all"
           >
             <Download className="w-3.5 h-3.5" />
             <span>Download PDF / Print</span>

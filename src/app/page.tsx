@@ -11,6 +11,7 @@ import { NoticesAndMinutesView } from "../components/modules/NoticesAndMinutesVi
 import { SponsorshipView } from "../components/modules/SponsorshipView";
 import { QRCodeModal } from "../components/common/QRCodeModal";
 import { BillReceiptModal } from "../components/common/BillReceiptModal";
+import { PropertyTaxReceiptModal } from "../components/common/PropertyTaxReceiptModal";
 import { DocumentPreviewModal } from "../components/common/DocumentPreviewModal";
 import { AdminManageModal } from "../components/modules/AdminManageModal";
 import { LoginView } from "../components/auth/LoginView";
@@ -21,7 +22,7 @@ import { AdminDocumentRequestsModal } from "../components/modules/AdminDocumentR
 import { AdminComplaintsModal } from "../components/modules/AdminComplaintsModal";
 import { AdminFacilityBookingsModal } from "../components/modules/AdminFacilityBookingsModal";
 import { NotificationCenterView } from "../components/modules/NotificationCenterView";
-import { MaintenanceBill, DocumentItem } from "../types";
+import { MaintenanceBill, DocumentItem, FlatPropertyTax } from "../types";
 
 export default function Home() {
   const {
@@ -32,6 +33,7 @@ export default function Home() {
     logout,
     requestDocument,
     fulfillDocumentRequest,
+    markDocumentNotAvailable,
     lodgeComplaint,
     updateComplaintStatus,
     bookFacility,
@@ -48,12 +50,15 @@ export default function Home() {
     addCampaign,
     sendPaymentReminder,
     markNotificationAsRead,
+    updatePropertyTax,
     resetToDefault,
   } = useCohoStore();
 
   // Active Modals State
   const [activePayingBill, setActivePayingBill] = useState<MaintenanceBill | null>(null);
   const [activeReceiptBill, setActiveReceiptBill] = useState<MaintenanceBill | null>(null);
+  const [activePayingTax, setActivePayingTax] = useState<FlatPropertyTax | null>(null);
+  const [activeReceiptTax, setActiveReceiptTax] = useState<FlatPropertyTax | null>(null);
   const [activePreviewDoc, setActivePreviewDoc] = useState<DocumentItem | null>(null);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
 
@@ -66,6 +71,11 @@ export default function Home() {
   const [isAdminBookingsModalOpen, setIsAdminBookingsModalOpen] = useState(false);
   const [isNotificationCenterOpen, setIsNotificationCenterOpen] = useState(false);
 
+  // Filter States for Detail Queue Modals
+  const [docRequestsModalFilter, setDocRequestsModalFilter] = useState<"all" | "pending" | "fulfilled" | "unavailable" | "not_available">("all");
+  const [bookingsModalFilter, setBookingsModalFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
+  const [complaintsModalFilter, setComplaintsModalFilter] = useState<"all" | "pending" | "in_progress" | "resolved">("all");
+
   // Tenant RBAC: Redirect away from restricted tabs
   useEffect(() => {
     if (
@@ -77,19 +87,28 @@ export default function Home() {
     }
   }, [currentUser.role, state.activeTab, setActiveTab]);
 
+  // Splash Screen Dismissal Coordinator
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    const hideSplash = () => {
+      const splash = document.getElementById("splash");
+      if (!splash) return;
+      splash.classList.add("hide");
+      setTimeout(() => {
+        splash.remove();
+      }, 300);
+    };
+
+    const elapsed = typeof performance !== "undefined" ? performance.now() : 0;
+    const remainingDelay = Math.max(0, 1500 - elapsed);
+    const timer = setTimeout(hideSplash, remainingDelay);
+
+    return () => clearTimeout(timer);
+  }, [isLoaded]);
+
   if (!isLoaded) {
-    return (
-      <div className="min-h-screen bg-[#0A1120] flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-[#111C2E] border border-[#22304A] text-[#F3F5F9] flex items-center justify-center font-bold text-lg animate-pulse shadow-sm">
-            C
-          </div>
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#8C97AD]">
-            Loading CoHo Smart Portal...
-          </span>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   // Auth Gate: Render LoginView when not authenticated
@@ -103,6 +122,24 @@ export default function Home() {
   ) => {
     if (activePayingBill) {
       payBill(activePayingBill.id, method, paymentRef);
+    } else if (activePayingTax) {
+      const generatedRef = paymentRef || `TXN-PT-${Date.now().toString(36).toUpperCase()}`;
+      const paidDate = new Date().toISOString().split("T")[0];
+      const updatedTax: FlatPropertyTax = {
+        ...activePayingTax,
+        status: "paid",
+        lastPaidDate: paidDate,
+        paymentRef: generatedRef,
+        paymentMethod: method,
+      };
+      updatePropertyTax(activePayingTax.flatId, {
+        status: "paid",
+        lastPaidDate: paidDate,
+        paymentRef: generatedRef,
+        paymentMethod: method,
+      });
+      setActivePayingTax(null);
+      setActiveReceiptTax(updatedTax);
     }
   };
 
@@ -114,9 +151,9 @@ export default function Home() {
     state.facilityBookings?.filter((b) => b.status === "pending").length || 0;
 
   return (
-    <div className="min-h-screen bg-[#0A1120] text-[#F3F5F9] flex flex-col items-center">
+    <div className="min-h-screen bg-[#0E1420] text-[#F5F1E8] flex flex-col items-center">
       {/* Container - Native App width on desktop with smooth scaling */}
-      <div className="w-full max-w-lg min-h-screen bg-[#0A1120] flex flex-col relative sm:border-x sm:border-[#22304A] sm:shadow-sm">
+      <div className="w-full max-w-lg min-h-screen bg-[#0E1420] flex flex-col relative sm:border-x sm:border-[#2B3854] sm:shadow-sm">
         {/* Sticky Header - Locked to active session with simple Log Out */}
         <div className="print:hidden">
           <Header
@@ -147,9 +184,18 @@ export default function Home() {
               onRequestDocument={() => setIsRequestDocModalOpen(true)}
               onLodgeComplaint={() => setIsLodgeComplaintModalOpen(true)}
               onBookFacility={() => setIsBookFacilityModalOpen(true)}
-              onOpenAdminRequests={() => setIsAdminDocRequestsModalOpen(true)}
-              onOpenAdminComplaints={() => setIsAdminComplaintsModalOpen(true)}
-              onOpenAdminBookings={() => setIsAdminBookingsModalOpen(true)}
+              onOpenAdminRequests={(filter = "all") => {
+                setDocRequestsModalFilter(filter);
+                setIsAdminDocRequestsModalOpen(true);
+              }}
+              onOpenAdminComplaints={(filter = "all") => {
+                setComplaintsModalFilter(filter);
+                setIsAdminComplaintsModalOpen(true);
+              }}
+              onOpenAdminBookings={(filter = "all") => {
+                setBookingsModalFilter(filter);
+                setIsAdminBookingsModalOpen(true);
+              }}
               notifications={state.notifications}
               onDismissNotification={markNotificationAsRead}
               pendingRequestsCount={pendingRequestsCount}
@@ -167,6 +213,13 @@ export default function Home() {
               onViewReceipt={(bill) => setActiveReceiptBill(bill)}
               notifications={state.notifications}
               onSendPaymentReminder={sendPaymentReminder}
+              propertyTaxes={state.propertyTaxes}
+              onUpdatePropertyTax={updatePropertyTax}
+              onPayPropertyTax={(tax) => setActivePayingTax(tax)}
+              onViewPropertyTaxReceipt={(tax) => {
+                const currentTax = state.propertyTaxes.find((pt) => pt.flatId === tax.flatId) || tax;
+                setActiveReceiptTax(currentTax);
+              }}
             />
           )}
 
@@ -232,12 +285,37 @@ export default function Home() {
           />
         )}
 
+        {/* Property Tax Payment QR Modal */}
+        {activePayingTax && (
+          <QRCodeModal
+            isOpen={Boolean(activePayingTax)}
+            onClose={() => setActivePayingTax(null)}
+            amount={activePayingTax.annualTaxAmount}
+            title={`Property Tax AY 2026-27`}
+            subtitle={`Flat ${activePayingTax.flatNumber} • SAC ${activePayingTax.sacNumber}`}
+            billId={`PT-${activePayingTax.flatNumber}`}
+            residentName={currentUser.residentName}
+            flatNumber={activePayingTax.flatNumber}
+            onPaymentSuccess={handlePaySuccess}
+          />
+        )}
+
         {/* Payment Receipt Modal */}
         {activeReceiptBill && (
           <BillReceiptModal
             isOpen={Boolean(activeReceiptBill)}
             onClose={() => setActiveReceiptBill(null)}
             bill={activeReceiptBill}
+            currentUser={currentUser}
+          />
+        )}
+
+        {/* Property Tax Receipt Modal */}
+        {activeReceiptTax && (
+          <PropertyTaxReceiptModal
+            isOpen={Boolean(activeReceiptTax)}
+            onClose={() => setActiveReceiptTax(null)}
+            tax={activeReceiptTax}
             currentUser={currentUser}
           />
         )}
@@ -289,33 +367,70 @@ export default function Home() {
           onSubmit={bookFacility}
         />
 
-        {/* Admin Document Requests Modal */}
+        {/* Admin & Resident Document Requests Modal */}
         <AdminDocumentRequestsModal
           isOpen={isAdminDocRequestsModalOpen}
           onClose={() => setIsAdminDocRequestsModalOpen(false)}
-          requests={state.documentRequests || []}
+          requests={
+            currentUser.role === "admin"
+              ? (state.documentRequests || [])
+              : (state.documentRequests || []).filter(
+                  (r) => r.flatId === currentUser.id || r.flatNumber === currentUser.flatNumber
+                )
+          }
           onFulfillRequest={fulfillDocumentRequest}
+          onMarkNotAvailable={markDocumentNotAvailable}
+          initialFilter={docRequestsModalFilter}
+          isAdmin={currentUser.role === "admin"}
+          onRequestNewDoc={() => {
+            setIsAdminDocRequestsModalOpen(false);
+            setIsRequestDocModalOpen(true);
+          }}
         />
 
-        {/* Admin Complaints Modal */}
+        {/* Admin & Resident Complaints Modal */}
         <AdminComplaintsModal
           isOpen={isAdminComplaintsModalOpen}
           onClose={() => setIsAdminComplaintsModalOpen(false)}
-          complaints={state.complaints || []}
+          complaints={
+            currentUser.role === "admin"
+              ? (state.complaints || [])
+              : (state.complaints || []).filter(
+                  (c) => c.flatId === currentUser.id || c.flatNumber === currentUser.flatNumber
+                )
+          }
           onUpdateStatus={updateComplaintStatus}
+          initialFilter={complaintsModalFilter}
+          isAdmin={currentUser.role === "admin"}
+          onLodgeNewComplaint={() => {
+            setIsAdminComplaintsModalOpen(false);
+            setIsLodgeComplaintModalOpen(true);
+          }}
         />
 
-        {/* Admin Facility Bookings Modal */}
+        {/* Admin & Resident Facility Bookings Modal */}
         <AdminFacilityBookingsModal
           isOpen={isAdminBookingsModalOpen}
           onClose={() => setIsAdminBookingsModalOpen(false)}
-          bookings={state.facilityBookings || []}
+          bookings={
+            currentUser.role === "admin"
+              ? (state.facilityBookings || [])
+              : (state.facilityBookings || []).filter(
+                  (b) => b.flatId === currentUser.id || b.flatNumber === currentUser.flatNumber
+                )
+          }
           onUpdateStatus={updateFacilityBookingStatus}
+          initialFilter={bookingsModalFilter}
+          isAdmin={currentUser.role === "admin"}
+          onBookNewFacility={() => {
+            setIsAdminBookingsModalOpen(false);
+            setIsBookFacilityModalOpen(true);
+          }}
         />
 
         {/* Dedicated iOS/Signal-Style Notification Center */}
         {isNotificationCenterOpen && (
-          <div className="fixed inset-0 z-50 overflow-y-auto bg-[#0A1120]">
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-[#0E1420]">
             <NotificationCenterView onBack={() => setIsNotificationCenterOpen(false)} />
           </div>
         )}

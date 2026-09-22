@@ -72,11 +72,11 @@ export const LodgeComplaintModal: React.FC<LodgeComplaintModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-      <div className="bg-[#111C2E] border border-[#22304A] rounded-2xl w-full max-w-md shadow-sm p-6 relative animate-scale-up space-y-5 text-[#F3F5F9]">
+      <div className="bg-[#161F30] border border-[#2B3854] rounded-2xl w-full max-w-md shadow-sm p-6 relative animate-scale-up space-y-5 text-[#F5F1E8]">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-[#8C97AD] hover:text-[#F3F5F9] p-1.5 rounded-full hover:bg-[#16233A] transition-colors"
+          className="absolute top-4 right-4 text-[#A6ACC0] hover:text-[#F5F1E8] p-1.5 rounded-full hover:bg-[#1C2740] transition-colors"
           id="btn-close-lodge-complaint"
         >
           <X className="w-5 h-5" />
@@ -84,14 +84,14 @@ export const LodgeComplaintModal: React.FC<LodgeComplaintModalProps> = ({
 
         {/* Modal Header */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#EFE4CC]/15 text-[#F3F5F9] border border-[#EFE4CC]/30 flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#E8B565]/15 text-[#F5F1E8] border border-[#E8B565]/30 flex items-center justify-center shrink-0">
             <AlertCircle className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-[#F3F5F9]">
+            <h3 className="text-base font-bold text-[#F5F1E8]">
               Lodge a Complaint / Ticket
             </h3>
-            <p className="text-xs text-[#8C97AD]">
+            <p className="text-xs text-[#A6ACC0]">
               Flat {currentUser.flatNumber} • {currentUser.residentName}
             </p>
           </div>
@@ -99,22 +99,22 @@ export const LodgeComplaintModal: React.FC<LodgeComplaintModalProps> = ({
 
         {isSubmitted ? (
           <div className="py-8 text-center space-y-3">
-            <div className="w-14 h-14 rounded-full bg-[#16233A] border border-[#EFE4CC]/40 text-[#F3F5F9] flex items-center justify-center mx-auto">
+            <div className="w-14 h-14 rounded-full bg-[#1C2740] border border-[#E8B565]/40 text-[#F5F1E8] flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <h4 className="text-base font-bold text-[#F3F5F9]">
+            <h4 className="text-base font-bold text-[#F5F1E8]">
               Ticket Registered!
             </h4>
-            <p className="text-xs text-[#8C97AD]">
+            <p className="text-xs text-[#A6ACC0]">
               Your complaint has been logged and assigned status:{" "}
-              <span className="text-[#F3F5F9] font-bold">Pending</span>. The managing committee will inspect promptly.
+              <span className="text-[#F5F1E8] font-bold">Pending</span>. The managing committee will inspect promptly.
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Category Selector */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-[#8C97AD] block">
+              <label className="text-xs font-semibold uppercase tracking-wider text-[#A6ACC0] block">
                 Complaint Category
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -128,11 +128,11 @@ export const LodgeComplaintModal: React.FC<LodgeComplaintModalProps> = ({
                       onClick={() => setCategory(cat.id)}
                       className={`p-2.5 rounded-xl border text-left transition-all flex items-center gap-2 ${
                         isSelected
-                          ? "bg-[#16233A] border-[#EFE4CC] text-[#F3F5F9] font-bold shadow-sm"
-                          : "bg-[#0A1120]/60 border-[#22304A] text-[#8C97AD] hover:bg-[#16233A]/40"
+                          ? "bg-[#1C2740] border-[#E8B565] text-[#F5F1E8] font-bold shadow-sm"
+                          : "bg-[#0E1420]/60 border-[#2B3854] text-[#A6ACC0] hover:bg-[#1C2740]/40"
                       }`}
                     >
-                      <Icon className={`w-4 h-4 shrink-0 ${isSelected ? "text-[#F3F5F9]" : "text-[#8C97AD]"}`} />
+                      <Icon className={`w-4 h-4 shrink-0 ${isSelected ? "text-[#F5F1E8]" : "text-[#A6ACC0]"}`} />
                       <span className="text-xs truncate">{cat.label.split(" ")[0]}</span>
                     </button>
                   );
@@ -142,7 +142,7 @@ export const LodgeComplaintModal: React.FC<LodgeComplaintModalProps> = ({
 
             {/* Description Textarea */}
             <div className="space-y-1.5">
-              <label className="text-xs font-semibold uppercase tracking-wider text-[#8C97AD] block">
+              <label className="text-xs font-semibold uppercase tracking-wider text-[#A6ACC0] block">
                 Issue Description
               </label>
               <textarea
@@ -151,13 +151,13 @@ export const LodgeComplaintModal: React.FC<LodgeComplaintModalProps> = ({
                 onChange={(e) => setDescription(e.target.value)}
                 rows={4}
                 placeholder="Explain what is wrong (location, timing, severity)..."
-                className="w-full bg-[#0A1120] text-[#F3F5F9] border border-[#22304A] rounded-xl px-3.5 py-3 text-xs placeholder:text-[#8C97AD]/50 focus:outline-none focus:border-[#EFE4CC]"
+                className="w-full bg-[#0E1420] text-[#F5F1E8] border border-[#2B3854] rounded-xl px-3.5 py-3 text-xs placeholder:text-[#A6ACC0]/50 focus:outline-none focus:border-[#E8B565]"
                 id="input-complaint-desc"
               />
             </div>
 
-            <div className="text-[11px] text-[#8C97AD] bg-[#0A1120]/60 p-3 rounded-xl border border-[#22304A] flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#EFE4CC] shrink-0" />
+            <div className="text-[11px] text-[#A6ACC0] bg-[#0E1420]/60 p-3 rounded-xl border border-[#2B3854] flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#E8B565] shrink-0" />
               <span>
                 Ticket progression: <strong>Pending</strong> → <strong>In Progress</strong> → <strong>Resolved</strong>
               </span>
@@ -167,7 +167,7 @@ export const LodgeComplaintModal: React.FC<LodgeComplaintModalProps> = ({
             <div className="pt-1">
               <button
                 type="submit"
-                className="w-full bg-[#EFE4CC] hover:bg-[#F7F0DF] text-[#0A1120] font-black text-sm py-3.5 rounded-xl shadow-sm transition-all"
+                className="w-full bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] font-black text-sm py-3.5 rounded-xl shadow-sm transition-all"
                 id="btn-submit-complaint"
               >
                 Submit Ticket to Society Admin

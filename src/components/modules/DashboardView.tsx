@@ -22,7 +22,11 @@ import {
   Clock,
   PhoneCall,
   X,
+  Wallet,
+  Bell,
+  Sparkles,
 } from "lucide-react";
+import { StackedRequestsActivityChart } from "./StackedRequestsActivityChart";
 
 interface DashboardViewProps {
   currentUser: FlatUser;
@@ -39,9 +43,9 @@ interface DashboardViewProps {
   onRequestDocument?: () => void;
   onLodgeComplaint?: () => void;
   onBookFacility?: () => void;
-  onOpenAdminRequests?: () => void;
-  onOpenAdminComplaints?: () => void;
-  onOpenAdminBookings?: () => void;
+  onOpenAdminRequests?: (filter?: "all" | "pending" | "fulfilled" | "unavailable" | "not_available") => void;
+  onOpenAdminComplaints?: (filter?: "all" | "pending" | "in_progress" | "resolved") => void;
+  onOpenAdminBookings?: (filter?: "all" | "pending" | "approved" | "rejected") => void;
   onDismissNotification?: (notificationId: string) => void;
   pendingRequestsCount?: number;
   pendingComplaintsCount?: number;
@@ -72,13 +76,37 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   pendingBookingsCount = 0,
 }) => {
   const isAdmin = currentUser.role === "admin";
-  const latestNotice = notices[0];
 
   const activeReminder = !isAdmin
     ? notifications.find(
         (n) => n.flatNumber === currentUser.flatNumber && n.type === "due_reminder" && !n.read
       )
     : undefined;
+
+  const greeting = (() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 17) return "Good afternoon";
+    return "Good evening";
+  })();
+
+  const initials = isAdmin
+    ? "MC"
+    : currentUser.residentName
+        .split(" ")
+        .map((p) => p[0])
+        .filter(Boolean)
+        .slice(0, 2)
+        .join("")
+        .toUpperCase();
+
+  const relevantBills = isAdmin
+    ? bills
+    : bills.filter((b) => b.flatId === currentUser.id);
+  const duesOutstanding = relevantBills
+    .filter((b) => b.status === "pending" || b.status === "overdue")
+    .reduce((sum, b) => sum + b.totalAmount, 0);
+  const urgentNoticeCount = notices.filter((n) => n.category === "urgent").length;
 
   return (
     <div className="space-y-5 pb-24 animate-fade-in">
@@ -124,300 +152,285 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       )}
 
       {/* 1. Member Welcome & Society Header */}
-      <div className="bg-[#111C2E] border border-[#22304A] rounded-2xl p-5 shadow-sm">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold text-[var(--text)] tracking-tight">
-            {isAdmin ? "Managing Committee Console" : `Welcome, ${currentUser.residentName}`}
-          </h1>
-          <div className="text-right shrink-0">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C97AD] block">
-              Billing Cycle
-            </span>
-            <span className="text-xs font-bold text-[#F3F5F9] mt-0.5 block">
-              October 2026
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. Action Buttons: Admin vs Member */}
-      {isAdmin ? (
-        <div className="px-4 py-2 w-full grid grid-cols-3 gap-3">
-          <button
-            onClick={onOpenAdminRequests}
-            className="bg-[#111C2E] border border-[#22304A] rounded-2xl p-3.5 flex flex-col items-start justify-between hover:border-[#EFE4CC] hover:bg-[#16233A] transition-all cursor-pointer group text-left shadow-sm"
-            id="btn-admin-view-requests"
-          >
-            <div className="w-9 h-9 rounded-xl bg-[#EFE4CC]/15 text-[#F3F5F9] flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform shrink-0">
-              <FileText className="w-5 h-5" />
-            </div>
-            <div className="min-w-0 w-full">
-              <div className="text-sm font-bold text-[#F3F5F9]">Doc Requests</div>
-              <div className="text-xs text-[#F3F5F9] font-semibold truncate w-full">
-                {pendingRequestsCount} Pending
-              </div>
-            </div>
-          </button>
-
-          <button
-            onClick={onOpenAdminBookings}
-            className="bg-[#111C2E] border border-[#22304A] rounded-2xl p-3.5 flex flex-col items-start justify-between hover:border-[#EFE4CC] hover:bg-[#16233A] transition-all cursor-pointer group text-left shadow-sm"
-            id="btn-admin-view-bookings"
-          >
-            <div className="w-9 h-9 rounded-xl bg-[#EFE4CC]/15 text-[#F3F5F9] flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform shrink-0">
-              <Calendar className="w-5 h-5" />
-            </div>
-            <div className="min-w-0 w-full">
-              <div className="text-sm font-bold text-[#F3F5F9]">Bookings</div>
-              <div className="text-xs text-[#F3F5F9] font-semibold truncate w-full">
-                {pendingBookingsCount} Pending
-              </div>
-            </div>
-          </button>
-
-          <button
-            onClick={onOpenAdminComplaints}
-            className="bg-[#111C2E] border border-[#22304A] rounded-2xl p-3.5 flex flex-col items-start justify-between hover:border-[#EFE4CC] hover:bg-[#16233A] transition-all cursor-pointer group text-left shadow-sm"
-            id="btn-admin-view-complaints"
-          >
-            <div className="w-9 h-9 rounded-xl bg-[#EFE4CC]/15 text-[#F3F5F9] flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform shrink-0">
-              <AlertTriangle className="w-5 h-5" />
-            </div>
-            <div className="min-w-0 w-full">
-              <div className="text-sm font-bold text-[#F3F5F9]">Complaints</div>
-              <div className="text-xs text-[#F3F5F9] font-semibold truncate w-full">
-                {pendingComplaintsCount} Active
-              </div>
-            </div>
-          </button>
-        </div>
-      ) : (
-        <div className="px-4 py-2 w-full grid grid-cols-3 gap-3">
-          <button
-            onClick={onRequestDocument}
-            className="bg-[#111C2E] border border-[#22304A] rounded-2xl p-3.5 flex flex-col items-start justify-between hover:border-[#EFE4CC] hover:bg-[#16233A] transition-all cursor-pointer group text-left shadow-sm"
-            id="btn-request-document"
-          >
-            <div className="w-9 h-9 rounded-xl bg-[#EFE4CC]/15 text-[#F3F5F9] flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform shrink-0">
-              <FileText className="w-5 h-5" />
-            </div>
-            <div className="min-w-0 w-full">
-              <div className="text-sm font-bold text-[#F3F5F9]">Document</div>
-              <div className="text-xs text-[#8C97AD] truncate w-full">NOC, Certs</div>
-            </div>
-          </button>
-
-          <button
-            onClick={onBookFacility}
-            className="bg-[#111C2E] border border-[#22304A] rounded-2xl p-3.5 flex flex-col items-start justify-between hover:border-[#EFE4CC] hover:bg-[#16233A] transition-all cursor-pointer group text-left shadow-sm"
-            id="btn-book-facility"
-          >
-            <div className="w-9 h-9 rounded-xl bg-[#EFE4CC]/15 text-[#F3F5F9] flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform shrink-0">
-              <Calendar className="w-5 h-5" />
-            </div>
-            <div className="min-w-0 w-full">
-              <div className="text-sm font-bold text-[#F3F5F9]">Facility</div>
-              <div className="text-xs text-[#8C97AD] truncate w-full">Clubhouse, Ground</div>
-            </div>
-          </button>
-
-          <button
-            onClick={onLodgeComplaint}
-            className="bg-[#111C2E] border border-[#22304A] rounded-2xl p-3.5 flex flex-col items-start justify-between hover:border-[#EFE4CC] hover:bg-[#16233A] transition-all cursor-pointer group text-left shadow-sm"
-            id="btn-lodge-complaint"
-          >
-            <div className="w-9 h-9 rounded-xl bg-[#EFE4CC]/15 text-[#F3F5F9] flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform shrink-0">
-              <AlertTriangle className="w-5 h-5" />
-            </div>
-            <div className="min-w-0 w-full">
-              <div className="text-sm font-bold text-[#F3F5F9]">Complaint</div>
-              <div className="text-xs text-[#8C97AD] truncate w-full">Issue Ticket</div>
-            </div>
-          </button>
-        </div>
-      )}
-
-      {/* 3. Active Requests & Activity Live Tracker Card */}
-      <div className="bg-[#111C2E] rounded-2xl p-5 border border-[#22304A] shadow-sm space-y-3.5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#EFE4CC]/15 text-[#F3F5F9] flex items-center justify-center">
-              <Clock className="w-4 h-4" />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-[#F3F5F9]">
-                {isAdmin ? "Active Society Requests & Activity" : "Active Requests & Activity"}
-              </h4>
-              <p className="text-[10px] text-[#8C97AD]">
-                {isAdmin
-                  ? "Live queue across documents, facility bookings & member tickets"
-                  : "Live tracking of your documents, facility bookings & complaints"}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Dynamic Activity List */}
-        {(() => {
-          const userDocRequests = isAdmin
-            ? documentRequests
-            : documentRequests.filter((r) => r.flatId === currentUser.id);
-          const userBookings = isAdmin
-            ? facilityBookings
-            : facilityBookings.filter((b) => b.flatId === currentUser.id);
-          const userComplaints = isAdmin
-            ? complaints
-            : complaints.filter((c) => c.flatId === currentUser.id);
-
-          const items: {
-            id: string;
-            type: "doc" | "facility" | "complaint";
-            title: string;
-            subtitle: string;
-            status: string;
-            date: string;
-          }[] = [
-            ...userDocRequests.map((r) => ({
-              id: r.id,
-              type: "doc" as const,
-              title: r.documentName,
-              subtitle: `${isAdmin ? `Flat ${r.flatNumber} • ` : ""}${r.copyType === "digital" ? "Digital PDF" : "Physical Copy"}${r.note ? ` • ${r.note}` : ""}`,
-              status: r.status,
-              date: r.requestedAt,
-            })),
-            ...userBookings.map((b) => ({
-              id: b.id,
-              type: "facility" as const,
-              title: `${b.facility} Booking`,
-              subtitle: `${isAdmin ? `Flat ${b.flatNumber} • ` : ""}${b.date} • ${b.timeSlot.split("(")[0]} • ${b.purpose}`,
-              status: b.status,
-              date: b.createdAt,
-            })),
-            ...userComplaints.map((c) => ({
-              id: c.id,
-              type: "complaint" as const,
-              title: `${c.categoryLabel}: ${c.description.slice(0, 32)}...`,
-              subtitle: `${isAdmin ? `Flat ${c.flatNumber} • ` : ""}${c.adminResponse || "Ticket logged"}`,
-              status: c.status,
-              date: c.createdAt,
-            })),
-          ];
-
-          if (items.length === 0) {
-            return (
-              <div className="bg-[#0A1120]/60 border border-[#22304A] rounded-xl p-4 text-center">
-                <p className="text-xs text-[#8C97AD]">No active requests at the moment.</p>
-                <p className="text-[10px] text-[#8C97AD]/60 mt-1">
-                  Use the quick action buttons above to request documents, book facilities, or log maintenance tickets.
-                </p>
-              </div>
-            );
-          }
-
-          return (
-            <div className="space-y-2">
-              {items.slice(0, 5).map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => {
-                    if (isAdmin) {
-                      if (item.type === "doc") onOpenAdminRequests?.();
-                      else if (item.type === "facility") onOpenAdminBookings?.();
-                      else if (item.type === "complaint") onOpenAdminComplaints?.();
-                    }
-                  }}
-                  className={`bg-[#0A1120]/70 border border-[#22304A] rounded-xl p-3 flex items-center justify-between gap-3 hover:border-[#EFE4CC]/40 transition-colors ${
-                    isAdmin ? "cursor-pointer active:scale-[0.99]" : ""
-                  }`}
-                >
-                  <div className="flex items-center gap-2.5 min-w-0">
-                    <div className="w-8 h-8 rounded-lg bg-[#111C2E] border border-[#22304A] flex items-center justify-center shrink-0">
-                      {item.type === "doc" ? (
-                        <FileText className="w-4 h-4 text-[#F3F5F9]" />
-                      ) : item.type === "facility" ? (
-                        <Calendar className="w-4 h-4 text-[#F3F5F9]" />
-                      ) : (
-                        <AlertTriangle className="w-4 h-4 text-[#F3F5F9]" />
-                      )}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-xs font-bold text-[#F3F5F9] truncate">
-                        {item.title}
-                      </div>
-                      <div className="text-[10px] text-[#8C97AD] truncate">
-                        {item.subtitle}
-                      </div>
-                    </div>
-                  </div>
-
-                  <span
-                    className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border shrink-0 ${
-                      item.status === "approved" || item.status === "fulfilled" || item.status === "resolved"
-                        ? "text-[#4FD1A1] bg-[#111C2E] border-[#4FD1A1]/30"
-                        : item.status === "rejected"
-                        ? "text-[#F0736A] bg-[#2A1418] border-[#F0736A]/30"
-                        : "text-[#A9B4CC] bg-[#111C2E] border-[#A9B4CC]/30"
-                    }`}
-                  >
-                    {item.status.replace("_", " ")}
-                  </span>
-                </div>
-              ))}
-            </div>
-          );
-        })()}
-      </div>
-
-      {/* 4. Latest Urgent Announcement Broadcast Ticker */}
-      {latestNotice && (
+      <div className="card-elevated relative overflow-hidden border border-[#2B3854] rounded-3xl p-6 bg-gradient-to-br from-[#1B2740] via-[#161F30] to-[#111827]">
+        {/* Warm accent glow */}
         <div
-          onClick={() => onNavigate("notices")}
-          className={`${
-            latestNotice.category === "urgent"
-              ? "bg-[#2A1418]/60 border-[#F0736A]/30 text-[#F0736A]"
-              : "bg-[#111C2E] border-[#22304A] text-[#F3F5F9]"
-          } border rounded-2xl p-4 flex flex-col justify-between overflow-hidden break-words cursor-pointer hover:opacity-90 transition-all shadow-sm`}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <div className={`flex items-center gap-1.5 font-bold text-xs ${latestNotice.category === "urgent" ? "text-[#F0736A]" : "text-[#F3F5F9]"}`}>
-              <AlertTriangle className={`w-4 h-4 shrink-0 ${latestNotice.category === "urgent" ? "text-[#F0736A]" : "text-[#F3F5F9]"}`} />
-              <span>LATEST NOTICE • {latestNotice.category.toUpperCase()}</span>
+          aria-hidden
+          className="pointer-events-none absolute -top-16 -right-10 w-56 h-56 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(232,181,101,0.24), transparent 70%)" }}
+        />
+        {/* Cool secondary glow */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-20 -left-12 w-56 h-56 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(127,170,209,0.10), transparent 70%)" }}
+        />
+        {/* Hairline top highlight */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-px"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent)" }}
+        />
+        {/* Fine dot-grid texture for depth */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage: "radial-gradient(rgba(245,241,232,0.7) 1px, transparent 1px)",
+            backgroundSize: "16px 16px",
+          }}
+        />
+
+        <div className="relative z-10">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="accent-glow shrink-0 w-12 h-12 rounded-2xl bg-gradient-to-br from-[#E8B565] to-[#D9A24F] flex items-center justify-center text-[#14100A] font-extrabold text-sm tracking-tight">
+                {initials}
+              </div>
+              <div className="min-w-0">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#A6ACC0] flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-[#E8B565]" />
+                  {greeting}
+                </span>
+                <h1 className="text-xl font-extrabold text-[var(--text)] tracking-tight truncate">
+                  {isAdmin ? "Managing Committee Console" : currentUser.residentName}
+                </h1>
+              </div>
             </div>
-            <span className={`text-[10px] font-medium shrink-0 ${latestNotice.category === "urgent" ? "text-[#F0736A]/80" : "text-[#8C97AD]"}`}>{latestNotice.postedAt}</span>
+            <div className="text-right shrink-0">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#A6ACC0] block">
+                Billing Cycle
+              </span>
+              <span className="text-xs font-bold text-[#F5F1E8] mt-0.5 block">
+                October 2026
+              </span>
+            </div>
           </div>
-          <h4 className={`text-sm font-bold leading-snug break-words ${latestNotice.category === "urgent" ? "text-[#F3F5F9]" : "text-[#F3F5F9]"}`}>{latestNotice.title}</h4>
-          <p className={`text-xs mt-1.5 line-clamp-2 leading-relaxed break-words ${latestNotice.category === "urgent" ? "text-[#F0736A]/90" : "text-[#8C97AD]"}`}>{latestNotice.content}</p>
-          <div className={`mt-2.5 flex items-center justify-between text-xs font-semibold ${latestNotice.category === "urgent" ? "text-[#F0736A]" : "text-[#F3F5F9]"}`}>
-            <span className="text-[11px] underline">Read in Hindi/Marathi & details</span>
-            <ChevronRight className="w-3.5 h-3.5" />
+
+          <div className="mt-4 pt-4 border-t border-white/[0.06] flex items-center justify-between">
+            <div className="text-xs text-[#A6ACC0]">
+              {isAdmin ? "Society Overview" : `Flat ${currentUser.flatNumber} • ${currentUser.isOwner ? "Owner" : "Resident"}`}
+            </div>
+            {duesOutstanding > 0 ? (
+              <button
+                onClick={() => onNavigate("payments")}
+                className="tap-scale-soft flex items-center gap-1.5 text-[11px] font-bold text-[#E2A94D] bg-[#E2A94D]/10 border border-[#E2A94D]/25 rounded-full px-2.5 py-1"
+              >
+                <Wallet className="w-3 h-3" />
+                ₹{duesOutstanding.toLocaleString("en-IN")} due
+              </button>
+            ) : (
+              <span className="flex items-center gap-1.5 text-[11px] font-bold text-[#8FBF8A] bg-[#8FBF8A]/10 border border-[#8FBF8A]/25 rounded-full px-2.5 py-1">
+                All dues clear
+              </span>
+            )}
           </div>
         </div>
-      )}
+      </div>
+
+      {/* 1b. At-a-glance KPI strip */}
+      <div className="grid grid-cols-2 gap-3">
+        <button
+          onClick={() => onNavigate("payments")}
+          className="list-item-in tap-scale-soft text-left bg-[#161F30] border border-[#2B3854] rounded-2xl p-3 flex flex-col gap-2 hover:border-[#E8B565] hover:bg-[#1C2740] transition-all shadow-sm"
+          style={{ "--stagger-delay": "0ms" } as React.CSSProperties}
+        >
+          <div className="w-7 h-7 rounded-lg bg-[#E2A94D]/15 text-[#E2A94D] flex items-center justify-center">
+            <Wallet className="w-3.5 h-3.5" />
+          </div>
+          <div>
+            <div className="text-base font-extrabold text-[#F5F1E8] leading-none">
+              ₹{duesOutstanding > 999 ? `${(duesOutstanding / 1000).toFixed(1)}k` : duesOutstanding}
+            </div>
+            <div className="text-[10px] text-[#A6ACC0] mt-1 font-medium">Dues Due</div>
+          </div>
+        </button>
+
+        <button
+          onClick={() => onNavigate("notices")}
+          className="list-item-in tap-scale-soft text-left bg-[#161F30] border border-[#2B3854] rounded-2xl p-3 flex flex-col gap-2 hover:border-[#E8B565] hover:bg-[#1C2740] transition-all shadow-sm"
+          style={{ "--stagger-delay": "60ms" } as React.CSSProperties}
+        >
+          <div className="w-7 h-7 rounded-lg bg-[#E2685B]/15 text-[#E2685B] flex items-center justify-center">
+            <Bell className="w-3.5 h-3.5" />
+          </div>
+          <div>
+            <div className="text-base font-extrabold text-[#F5F1E8] leading-none">{urgentNoticeCount}</div>
+            <div className="text-[10px] text-[#A6ACC0] mt-1 font-medium">Urgent Notices</div>
+          </div>
+        </button>
+      </div>
+
+      {/* 2. Action Bento Tiles: Consistent Styling for Admin & Resident */}
+      {(() => {
+        const userPendingDocCount = documentRequests.filter(
+          (r) =>
+            (r.flatId === currentUser.id || r.flatNumber === currentUser.flatNumber) &&
+            r.status === "pending"
+        ).length;
+        const userPendingBookingCount = facilityBookings.filter(
+          (b) =>
+            (b.flatId === currentUser.id || b.flatNumber === currentUser.flatNumber) &&
+            b.status === "pending"
+        ).length;
+        const userPendingComplaintCount = complaints.filter(
+          (c) =>
+            (c.flatId === currentUser.id || c.flatNumber === currentUser.flatNumber) &&
+            c.status === "pending"
+        ).length;
+
+        const userDocRequests = isAdmin
+          ? documentRequests
+          : documentRequests.filter(
+              (r) => r.flatId === currentUser.id || r.flatNumber === currentUser.flatNumber
+            );
+        const userBookings = isAdmin
+          ? facilityBookings
+          : facilityBookings.filter(
+              (b) => b.flatId === currentUser.id || b.flatNumber === currentUser.flatNumber
+            );
+        const userComplaints = isAdmin
+          ? complaints
+          : complaints.filter(
+              (c) => c.flatId === currentUser.id || c.flatNumber === currentUser.flatNumber
+            );
+
+        return (
+          <>
+            {!isAdmin && (
+              <div className="px-4 py-2 w-full grid grid-cols-3 gap-3">
+              {/* Doc Requests Tile */}
+              <button
+                onClick={() => onOpenAdminRequests?.("all")}
+                className="list-item-in bg-[#161F30] border border-[#2B3854] rounded-2xl p-3.5 flex flex-col items-start justify-between hover:border-[#E8B565] hover:bg-[#1C2740] transition-all cursor-pointer group text-left shadow-sm min-h-[96px] active:scale-[0.98]"
+                style={{ "--stagger-delay": "0ms" } as React.CSSProperties}
+                id={isAdmin ? "btn-admin-view-requests" : "btn-request-document"}
+              >
+                <div className="w-9 h-9 rounded-xl bg-[#E8B565]/15 text-[#F5F1E8] border border-[#E8B565]/20 flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform shrink-0">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <div className="min-w-0 w-full">
+                  <div className="text-sm font-bold text-[#F5F1E8]">Doc Requests</div>
+                  <div className="text-xs truncate w-full">
+                    {isAdmin ? (
+                      <span className="text-[#F5F1E8] font-semibold">
+                        {pendingRequestsCount} Pending
+                      </span>
+                    ) : userPendingDocCount > 0 ? (
+                      <span className="text-[#F5F1E8] font-semibold">
+                        {userPendingDocCount} Pending
+                      </span>
+                    ) : userDocRequests.some((r) => r.status === "unavailable" || r.status === "not_available") ? (
+                      <span className="text-[#E2685B] font-semibold">
+                        Not Available
+                      </span>
+                    ) : userDocRequests.length > 0 ? (
+                      <span className="text-[#8FBF8A] font-semibold">
+                        {userDocRequests.length} Active
+                      </span>
+                    ) : (
+                      <span className="text-[#A6ACC0]">Request NOC</span>
+                    )}
+                  </div>
+                </div>
+              </button>
+
+              {/* Facility Bookings Tile */}
+              <button
+                onClick={isAdmin ? () => onOpenAdminBookings?.() : onBookFacility}
+                className="list-item-in bg-[#161F30] border border-[#2B3854] rounded-2xl p-3.5 flex flex-col items-start justify-between hover:border-[#E8B565] hover:bg-[#1C2740] transition-all cursor-pointer group text-left shadow-sm min-h-[96px] active:scale-[0.98]"
+                style={{ "--stagger-delay": "60ms" } as React.CSSProperties}
+                id={isAdmin ? "btn-admin-view-bookings" : "btn-book-facility"}
+              >
+                <div className="w-9 h-9 rounded-xl bg-[#E8B565]/15 text-[#F5F1E8] border border-[#E8B565]/20 flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform shrink-0">
+                  <Calendar className="w-5 h-5" />
+                </div>
+                <div className="min-w-0 w-full">
+                  <div className="text-sm font-bold text-[#F5F1E8]">Bookings</div>
+                  <div className="text-xs truncate w-full">
+                    {isAdmin ? (
+                      <span className="text-[#F5F1E8] font-semibold">
+                        {pendingBookingsCount} Pending
+                      </span>
+                    ) : userPendingBookingCount > 0 ? (
+                      <span className="text-[#F5F1E8] font-semibold">
+                        {userPendingBookingCount} Pending
+                      </span>
+                    ) : (
+                      <span className="text-[#A6ACC0]">Reserve Hall</span>
+                    )}
+                  </div>
+                </div>
+              </button>
+
+              {/* Complaints Tile */}
+              <button
+                onClick={isAdmin ? () => onOpenAdminComplaints?.() : onLodgeComplaint}
+                className="list-item-in bg-[#161F30] border border-[#2B3854] rounded-2xl p-3.5 flex flex-col items-start justify-between hover:border-[#E8B565] hover:bg-[#1C2740] transition-all cursor-pointer group text-left shadow-sm min-h-[96px] active:scale-[0.98]"
+                style={{ "--stagger-delay": "120ms" } as React.CSSProperties}
+                id={isAdmin ? "btn-admin-view-complaints" : "btn-lodge-complaint"}
+              >
+                <div className="w-9 h-9 rounded-xl bg-[#E8B565]/15 text-[#F5F1E8] border border-[#E8B565]/20 flex items-center justify-center mb-2.5 group-hover:scale-110 transition-transform shrink-0">
+                  <AlertTriangle className="w-5 h-5" />
+                </div>
+                <div className="min-w-0 w-full">
+                  <div className="text-sm font-bold text-[#F5F1E8]">Complaints</div>
+                  <div className="text-xs truncate w-full">
+                    {isAdmin ? (
+                      <span className="text-[#F5F1E8] font-semibold">
+                        {pendingComplaintsCount} Active
+                      </span>
+                    ) : userPendingComplaintCount > 0 ? (
+                      <span className="text-[#F5F1E8] font-semibold">
+                        {userPendingComplaintCount} Active
+                      </span>
+                    ) : (
+                      <span className="text-[#A6ACC0]">Raise Ticket</span>
+                    )}
+                  </div>
+                </div>
+              </button>
+            </div>
+            )}
+
+            {/* 3. Stacked Requests & Activity Status Chart (Admin & Resident) */}
+            <StackedRequestsActivityChart
+              isAdmin={isAdmin}
+              docRequests={userDocRequests}
+              bookings={userBookings}
+              complaints={userComplaints}
+              onOpenDocRequests={(f) => onOpenAdminRequests?.(f)}
+              onOpenBookings={(f) => onOpenAdminBookings?.(f)}
+              onOpenComplaints={(f) => onOpenAdminComplaints?.(f)}
+            />
+          </>
+        );
+      })()}
 
       {/* 6. Flat Profile / Society Summary */}
-      <div className="bg-[#111C2E] rounded-2xl p-4 border border-[#22304A] shadow-sm">
-        <div className="text-xs font-bold uppercase tracking-wider text-[#8C97AD] mb-2.5">
+      <div className="bg-[#161F30] rounded-2xl p-4 border border-[#2B3854] shadow-sm">
+        <div className="text-xs font-bold uppercase tracking-wider text-[#A6ACC0] mb-2.5">
           {isAdmin ? "Managing Committee RWA Registration" : "Flat Profile & Allocation"}
         </div>
         <div className="grid grid-cols-2 gap-3 text-xs">
-          <div className="flex items-center gap-2 bg-[#16233A]/50 border border-transparent p-2.5 rounded-xl">
-            <Car className="w-4 h-4 text-[#8C97AD]" />
+          <div className="flex items-center gap-2 bg-[#1C2740]/50 border border-transparent p-2.5 rounded-xl">
+            <Car className="w-4 h-4 text-[#A6ACC0]" />
             <div>
-              <span className="text-[10px] text-[#8C97AD] block">
+              <span className="text-[10px] text-[#A6ACC0] block">
                 {isAdmin ? "Office Wing" : "Assigned Parking"}
               </span>
-              <span className="font-bold text-[#F3F5F9] text-[11px] truncate block">
+              <span className="font-bold text-[#F5F1E8] text-[11px] truncate block">
                 {currentUser.parkingSlot}
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-2 bg-[#16233A]/50 border border-transparent p-2.5 rounded-xl">
-            <Calendar className="w-4 h-4 text-[#8C97AD]" />
+          <div className="flex items-center gap-2 bg-[#1C2740]/50 border border-transparent p-2.5 rounded-xl">
+            <Calendar className="w-4 h-4 text-[#A6ACC0]" />
             <div>
-              <span className="text-[10px] text-[#8C97AD] block">
+              <span className="text-[10px] text-[#A6ACC0] block">
                 {isAdmin ? "RWA Registration" : "Possession Since"}
               </span>
-              <span className="font-bold text-[#F3F5F9] text-[11px]">
+              <span className="font-bold text-[#F5F1E8] text-[11px]">
                 {isAdmin ? "Reg: BOM/HSG/2012/981" : currentUser.possessionDate}
               </span>
             </div>
@@ -426,19 +439,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </div>
 
       {/* 7. Emergency Society Contacts */}
-      <div className="bg-[#111C2E] border border-[#22304A] rounded-2xl p-4 flex items-center justify-between shadow-sm">
+      <div className="bg-[#161F30] border border-[#2B3854] rounded-2xl p-4 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-[#EFE4CC]/15 flex items-center justify-center text-[#F3F5F9]">
+          <div className="w-9 h-9 rounded-full bg-[#E8B565]/15 flex items-center justify-center text-[#F5F1E8]">
             <PhoneCall className="w-4 h-4" />
           </div>
           <div>
-            <div className="text-xs font-bold text-[#F3F5F9]">Emergency Gate & Security</div>
-            <div className="text-[11px] text-[#8C97AD]">Main Gate: Ext 101 • Facility Mgr: +91 98200 01122</div>
+            <div className="text-xs font-bold text-[#F5F1E8]">Emergency Gate & Security</div>
+            <div className="text-[11px] text-[#A6ACC0]">Main Gate: Ext 101 • Facility Mgr: +91 98200 01122</div>
           </div>
         </div>
         <a
           href="tel:101"
-          className="bg-[#EFE4CC] hover:bg-[#F7F0DF] text-[#0A1120] text-[11px] font-bold px-3.5 py-1.5 rounded-xl shadow-sm transition-all"
+          className="tap-scale bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] text-[11px] font-bold px-3.5 py-1.5 rounded-xl shadow-sm transition-all"
         >
           Call
         </a>

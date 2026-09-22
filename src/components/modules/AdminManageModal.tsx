@@ -158,30 +158,30 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in">
-      <div className="w-full max-w-lg bg-[#111C2E] text-[#F3F5F9] rounded-2xl border border-[#22304A] shadow-sm overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="modal-pop-in w-full max-w-lg bg-[#161F30] text-[#F5F1E8] rounded-2xl border border-[#2B3854] shadow-sm overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="p-4 bg-[#16233A] flex items-center justify-between border-b border-[#22304A]">
+        <div className="p-4 bg-[#1C2740] flex items-center justify-between border-b border-[#2B3854]">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-[#EFE4CC] text-[#0A1120] flex items-center justify-center font-bold shadow-sm">
+            <div className="w-7 h-7 rounded-lg bg-[#E8B565] text-[#0E1420] flex items-center justify-center font-bold shadow-sm">
               <ShieldAlert className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-[#F3F5F9] leading-tight">
+              <h3 className="text-sm font-bold text-[#F5F1E8] leading-tight">
                 Managing Committee Admin Console
               </h3>
-              <p className="text-[11px] text-[#8C97AD]">Emerald Heights RWA Executive Actions</p>
+              <p className="text-[11px] text-[#A6ACC0]">Emerald Heights RWA Executive Actions</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full hover:bg-white/[0.08] text-[#8C97AD] hover:text-[#F3F5F9] transition-colors"
+            className="p-1.5 rounded-full hover:bg-white/[0.08] text-[#A6ACC0] hover:text-[#F5F1E8] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex bg-[#111C2E] border-b border-[#22304A] px-3 pt-2 gap-1 overflow-x-auto no-scrollbar">
+        <div className="flex bg-[#161F30] border-b border-[#2B3854] px-3 pt-2 gap-1 overflow-x-auto no-scrollbar">
           {[
             { id: "notice", label: "Broadcast Notice", icon: Bell },
             { id: "rule", label: "Add Rule", icon: Scale },
@@ -196,8 +196,8 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
                 onClick={() => setActiveTab(tab.id as AdminTab)}
                 className={`py-2 px-3 rounded-t-xl text-xs font-bold flex items-center gap-1.5 transition-all ${
                   isActive
-                    ? "bg-[#16233A] text-[#F3F5F9] border-t-2 border-[#EFE4CC]"
-                    : "text-[#8C97AD] hover:text-[#F3F5F9]"
+                    ? "bg-[#1C2740] text-[#F5F1E8] border-t-2 border-[#E8B565]"
+                    : "text-[#A6ACC0] hover:text-[#F5F1E8]"
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -211,8 +211,8 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
         <div className="p-5 overflow-y-auto flex-1 text-xs space-y-4">
           {successMsg ? (
             <div className="py-12 text-center space-y-3 animate-fade-in">
-              <CheckCircle2 className="w-12 h-12 text-[#F3F5F9] mx-auto" />
-              <h4 className="text-lg font-bold text-[#F3F5F9]">{successMsg}</h4>
+              <CheckCircle2 className="w-12 h-12 text-[#F5F1E8] mx-auto" />
+              <h4 className="text-lg font-bold text-[#F5F1E8]">{successMsg}</h4>
             </div>
           ) : (
             <>
@@ -220,7 +220,7 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
               {activeTab === "notice" && (
                 <form onSubmit={handleSubmitNotice} className="space-y-3.5">
                   <div>
-                    <label className="text-[#8C97AD] block mb-1 font-semibold">
+                    <label className="text-[#A6ACC0] block mb-1 font-semibold">
                       Notice Heading
                     </label>
                     <input
@@ -229,19 +229,19 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
                       placeholder="e.g. Lift #2 Maintenance on Saturday"
                       value={noticeTitle}
                       onChange={(e) => setNoticeTitle(e.target.value)}
-                      className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9]"
+                      className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8]"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-[#8C97AD] block mb-1 font-semibold">Priority</label>
+                      <label className="text-[#A6ACC0] block mb-1 font-semibold">Priority</label>
                       <select
                         value={noticeCategory}
                         onChange={(e) =>
                           setNoticeCategory(e.target.value as Notice["category"])
                         }
-                        className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9]"
+                        className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8]"
                       >
                         <option value="general">General</option>
                         <option value="urgent">Urgent</option>
@@ -251,12 +251,12 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
                     </div>
 
                     <div className="flex items-center pt-5 pl-2">
-                      <label className="flex items-center gap-2 cursor-pointer text-[#F3F5F9] font-medium">
+                      <label className="flex items-center gap-2 cursor-pointer text-[#F5F1E8] font-medium">
                         <input
                           type="checkbox"
                           checked={noticePinned}
                           onChange={(e) => setNoticePinned(e.target.checked)}
-                          className="w-4 h-4 rounded text-[#F3F5F9] focus:ring-[#F3F5F9] accent-[#F3F5F9]"
+                          className="w-4 h-4 rounded text-[#F5F1E8] focus:ring-[#F5F1E8] accent-[#F5F1E8]"
                         />
                         <span>Pin to top</span>
                       </label>
@@ -264,7 +264,7 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
                   </div>
 
                   <div>
-                    <label className="text-[#8C97AD] block mb-1 font-semibold">
+                    <label className="text-[#A6ACC0] block mb-1 font-semibold">
                       Notice Description
                     </label>
                     <textarea
@@ -273,13 +273,13 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
                       placeholder="Detailed announcement content..."
                       value={noticeContent}
                       onChange={(e) => setNoticeContent(e.target.value)}
-                      className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9] resize-none"
+                      className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8] resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-[#EFE4CC] hover:bg-[#F7F0DF] text-[#0A1120] font-bold py-3 rounded-xl shadow-sm transition-all"
+                    className="w-full bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] font-bold py-3 rounded-xl shadow-sm transition-all"
                   >
                     Broadcast Notice to Residents
                   </button>
@@ -290,26 +290,26 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
               {activeTab === "rule" && (
                 <form onSubmit={handleSubmitRule} className="space-y-3.5">
                   <div>
-                    <label className="text-[#8C97AD] block mb-1 font-semibold">Rule Title</label>
+                    <label className="text-[#A6ACC0] block mb-1 font-semibold">Rule Title</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. Balcony Planter Safety Protocol"
                       value={ruleTitle}
                       onChange={(e) => setRuleTitle(e.target.value)}
-                      className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9]"
+                      className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8]"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-[#8C97AD] block mb-1 font-semibold">Category</label>
+                      <label className="text-[#A6ACC0] block mb-1 font-semibold">Category</label>
                       <select
                         value={ruleCat}
                         onChange={(e) =>
                           setRuleCat(e.target.value as SocietyRule["category"])
                         }
-                        className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9]"
+                        className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8]"
                       >
                         <option value="parking">Parking</option>
                         <option value="renovation">Renovation</option>
@@ -322,18 +322,18 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
                     </div>
 
                     <div>
-                      <label className="text-[#8C97AD] block mb-1 font-semibold">Origin AGM / Meeting</label>
+                      <label className="text-[#A6ACC0] block mb-1 font-semibold">Origin AGM / Meeting</label>
                       <input
                         type="text"
                         value={ruleOrigin}
                         onChange={(e) => setRuleOrigin(e.target.value)}
-                        className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9]"
+                        className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-[#8C97AD] block mb-1 font-semibold">
+                    <label className="text-[#A6ACC0] block mb-1 font-semibold">
                       Rule Description
                     </label>
                     <textarea
@@ -342,12 +342,12 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
                       placeholder="Details of the society regulation..."
                       value={ruleDesc}
                       onChange={(e) => setRuleDesc(e.target.value)}
-                      className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9] resize-none"
+                      className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8] resize-none"
                     />
                   </div>
 
                   <div>
-                    <label className="text-[#8C97AD] block mb-1 font-semibold">
+                    <label className="text-[#A6ACC0] block mb-1 font-semibold">
                       Penalty / Fine (Optional)
                     </label>
                     <input
@@ -355,13 +355,13 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
                       placeholder="e.g. ₹500 fine per violation"
                       value={rulePenalty}
                       onChange={(e) => setRulePenalty(e.target.value)}
-                      className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9]"
+                      className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8]"
                     />
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-[#EFE4CC] hover:bg-[#F7F0DF] text-[#0A1120] font-bold py-3 rounded-xl shadow-sm transition-all"
+                    className="w-full bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] font-bold py-3 rounded-xl shadow-sm transition-all"
                   >
                     Register Society Bylaw
                   </button>
@@ -372,26 +372,26 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
               {activeTab === "document" && (
                 <form onSubmit={handleSubmitDoc} className="space-y-3.5">
                   <div>
-                    <label className="text-[#8C97AD] block mb-1 font-semibold">Document Title</label>
+                    <label className="text-[#A6ACC0] block mb-1 font-semibold">Document Title</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. Share Certificate (Duplicate Issue)"
                       value={docTitle}
                       onChange={(e) => setDocTitle(e.target.value)}
-                      className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9]"
+                      className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8]"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="text-[#8C97AD] block mb-1 font-semibold">Category</label>
+                      <label className="text-[#A6ACC0] block mb-1 font-semibold">Category</label>
                       <select
                         value={docCategory}
                         onChange={(e) =>
                           setDocCategory(e.target.value as DocumentItem["category"])
                         }
-                        className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9]"
+                        className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8]"
                       >
                         <option value="noc">Society NOC</option>
                         <option value="share_certificate">Share Certificate</option>
@@ -402,7 +402,7 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
                     </div>
 
                     <div>
-                      <label className="text-[#8C97AD] block mb-1 font-semibold">Scope</label>
+                      <label className="text-[#A6ACC0] block mb-1 font-semibold">Scope</label>
                       <select
                         value={docIsSocietyWide ? "society" : docTargetFlat}
                         onChange={(e) => {
@@ -413,7 +413,7 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
                             setDocTargetFlat(e.target.value);
                           }
                         }}
-                        className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9]"
+                        className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8]"
                       >
                         <option value="society">Society-Wide Master Record</option>
                         {flats.map((f) => (
@@ -425,17 +425,17 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
                     </div>
                   </div>
 
-                  <div className="p-4 border border-dashed border-white/[0.12] rounded-2xl text-center bg-[#16233A] space-y-1">
-                    <Upload className="w-6 h-6 text-[#F3F5F9] mx-auto mb-1" />
-                    <span className="font-semibold text-[#F3F5F9] block">Select File (PDF / DOC)</span>
-                    <span className="text-[10px] text-[#8C97AD]">
+                  <div className="p-4 border border-dashed border-white/[0.12] rounded-2xl text-center bg-[#1C2740] space-y-1">
+                    <Upload className="w-6 h-6 text-[#F5F1E8] mx-auto mb-1" />
+                    <span className="font-semibold text-[#F5F1E8] block">Select File (PDF / DOC)</span>
+                    <span className="text-[10px] text-[#A6ACC0]">
                       (Simulation mode: attaches standard verified PDF template)
                     </span>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-[#EFE4CC] hover:bg-[#F7F0DF] text-[#0A1120] font-bold py-3 rounded-xl shadow-sm transition-all"
+                    className="w-full bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] font-bold py-3 rounded-xl shadow-sm transition-all"
                   >
                     Index into Document Vault
                   </button>
@@ -446,19 +446,19 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
               {activeTab === "meeting" && (
                 <form onSubmit={handleSubmitMeeting} className="space-y-3.5">
                   <div>
-                    <label className="text-[#8C97AD] block mb-1 font-semibold">Meeting Title</label>
+                    <label className="text-[#A6ACC0] block mb-1 font-semibold">Meeting Title</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. 53rd Annual General Meeting (AGM)"
                       value={meetingTitle}
                       onChange={(e) => setMeetingTitle(e.target.value)}
-                      className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9]"
+                      className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8]"
                     />
                   </div>
 
                   <div>
-                    <label className="text-[#8C97AD] block mb-1 font-semibold">
+                    <label className="text-[#A6ACC0] block mb-1 font-semibold">
                       Official Recorded Minutes
                     </label>
                     <textarea
@@ -467,17 +467,17 @@ export const AdminManageModal: React.FC<AdminManageModalProps> = ({
                       placeholder="Paste recorded minutes text here. Antigravity AI will automatically extract executive overview, key decisions, and action items..."
                       value={meetingMinutes}
                       onChange={(e) => setMeetingMinutes(e.target.value)}
-                      className="w-full bg-[#16233A] text-[#F3F5F9] p-2.5 rounded-xl border border-[#22304A] focus:outline-none focus:ring-1 focus:ring-[#F3F5F9] resize-none"
+                      className="w-full bg-[#1C2740] text-[#F5F1E8] p-2.5 rounded-xl border border-[#2B3854] focus:outline-none focus:ring-1 focus:ring-[#F5F1E8] resize-none"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={isGeneratingAI}
-                    className="w-full bg-[#EFE4CC] hover:bg-[#F7F0DF] text-[#0A1120] font-bold py-3 rounded-xl shadow-sm flex items-center justify-center gap-2 transition-all"
+                    className="w-full bg-[#E8B565] hover:bg-[#F0C87D] text-[#0E1420] font-bold py-3 rounded-xl shadow-sm flex items-center justify-center gap-2 transition-all"
                   >
                     {isGeneratingAI ? (
-                      <div className="w-4 h-4 border-2 border-[#0A1120] border-t-transparent rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-[#0E1420] border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <>
                         <Sparkles className="w-4 h-4 stroke-[2.5]" />
